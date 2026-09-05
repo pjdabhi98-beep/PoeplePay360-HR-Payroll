@@ -1,6 +1,8 @@
+
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import {
   Plus,
   Search,
@@ -10,71 +12,72 @@ import {
   IndianRupee,
   CalendarDays,
   Users,
-  ArrowUpRight,
+  FileText,
+  AlertTriangle,
 } from "lucide-react";
 
-const payruns = [
-  {
-    id: 1,
-    period: "August 2026",
-    structure: "Monthly Salary",
-    employees: 248,
-    amount: "₹42,80,000",
-    created: "01 Aug 2026",
-    status: "Paid",
-  },
-  {
-    id: 2,
-    period: "July 2026",
-    structure: "Monthly Salary",
-    employees: 245,
-    amount: "₹41,95,000",
-    created: "01 Jul 2026",
-    status: "Paid",
-  },
-  {
-    id: 3,
-    period: "September 2026",
-    structure: "Monthly Salary",
-    employees: 248,
-    amount: "₹43,20,000",
-    created: "01 Sep 2026",
-    status: "Processing",
-  },
-  {
-    id: 4,
-    period: "October 2026",
-    structure: "Monthly Salary",
-    employees: 248,
-    amount: "₹43,50,000",
-    created: "01 Oct 2026",
-    status: "Draft",
-  },
-];
+type Payrun = {
+  id: number;
+  name: string;
+  dateStart: string;
+  dateEnd: string;
+  state: string;
+  payslips: number;
+};
+
+const payruns: Payrun[] = [];
 
 export default function PayrollPage() {
-  const paidCount = payruns.filter(
-    (payrun) => payrun.status === "Paid"
+  const [search, setSearch] = useState("");
+  const [stateFilter, setStateFilter] = useState("All");
+
+  const doneCount = payruns.filter(
+    (payrun) => payrun.state === "Done"
   ).length;
 
   const processingCount = payruns.filter(
-    (payrun) => payrun.status === "Processing"
+    (payrun) => payrun.state === "Processing"
   ).length;
 
   const draftCount = payruns.filter(
-    (payrun) => payrun.status === "Draft"
+    (payrun) => payrun.state === "Draft"
   ).length;
 
-  return (
-    <div className="min-h-full space-y-6 pb-8">
-      {/* Header */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-600 via-indigo-600 to-violet-700 p-6 text-white shadow-xl shadow-indigo-100 sm:p-8">
-        <div className="absolute -right-16 -top-20 h-56 w-56 rounded-full bg-white/10" />
-        <div className="absolute -bottom-24 right-24 h-48 w-48 rounded-full bg-white/5" />
+  const filteredPayruns = payruns.filter((payrun) => {
+    const matchesSearch =
+      payrun.name.toLowerCase().includes(search.toLowerCase()) ||
+      payrun.dateStart.toLowerCase().includes(search.toLowerCase()) ||
+      payrun.dateEnd.toLowerCase().includes(search.toLowerCase());
 
-        <div className="relative z-10 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+    const matchesState =
+      stateFilter === "All" || payrun.state === stateFilter;
+
+    return matchesSearch && matchesState;
+  });
+
+  const getStateStyle = (state: string) => {
+    switch (state) {
+      case "Done":
+        return "bg-emerald-50 text-emerald-700";
+      case "Processing":
+        return "bg-amber-50 text-amber-700";
+      case "Draft":
+        return "bg-blue-50 text-blue-700";
+      case "Cancelled":
+        return "bg-rose-50 text-rose-700";
+      default:
+        return "bg-slate-100 text-slate-600";
+    }
+  };
+
+  return (
+    <div className="min-h-full space-y-6 bg-slate-50 pb-8">
+
+      {/* Header */}
+      <div className="rounded-3xl border border-slate-200 bg-slate-900 p-6 text-white sm:p-8">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <div className="mb-3 flex items-center gap-2 text-sm font-medium text-indigo-100">
+            <div className="mb-3 flex items-center gap-2 text-sm font-medium text-blue-300">
               <WalletCards size={17} />
               Payroll Management
             </div>
@@ -83,15 +86,15 @@ export default function PayrollPage() {
               Payroll
             </h1>
 
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-indigo-100 sm:text-base">
-              Manage payruns, salary processing, employee payroll and payment
-              status from one place.
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300 sm:text-base">
+              Create and process payruns, generate payslips and track payroll
+              status for employees.
             </p>
           </div>
 
           <Link
             href="/payroll/new"
-            className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-bold text-indigo-700 shadow-lg transition duration-200 hover:-translate-y-0.5 hover:bg-indigo-50 sm:w-auto"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-bold text-white transition hover:bg-blue-700 sm:w-auto"
           >
             <Plus size={19} />
             Create Payrun
@@ -101,14 +104,15 @@ export default function PayrollPage() {
 
       {/* Statistics */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+
         {/* Total Payruns */}
-        <div className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg">
+        <div className="group rounded-2xl border border-slate-200 bg-white p-5 transition duration-200 hover:-translate-y-1 hover:border-blue-200">
           <div className="flex items-center justify-between">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
               <WalletCards size={22} />
             </div>
 
-            <span className="rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-semibold text-indigo-600">
+            <span className="rounded-full bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-600">
               All
             </span>
           </div>
@@ -126,24 +130,24 @@ export default function PayrollPage() {
           </p>
         </div>
 
-        {/* Paid */}
-        <div className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg">
+        {/* Done */}
+        <div className="group rounded-2xl border border-slate-200 bg-white p-5 transition duration-200 hover:-translate-y-1 hover:border-blue-200">
           <div className="flex items-center justify-between">
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
               <CheckCircle2 size={22} />
             </div>
 
-            <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-600">
+            <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700">
               Completed
             </span>
           </div>
 
           <p className="mt-5 text-sm font-medium text-slate-500">
-            Paid Payruns
+            Completed Payruns
           </p>
 
           <p className="mt-1 text-3xl font-bold text-slate-900">
-            {paidCount}
+            {doneCount}
           </p>
 
           <p className="mt-2 text-xs text-slate-400">
@@ -152,13 +156,13 @@ export default function PayrollPage() {
         </div>
 
         {/* Processing */}
-        <div className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg">
+        <div className="group rounded-2xl border border-slate-200 bg-white p-5 transition duration-200 hover:-translate-y-1 hover:border-blue-200">
           <div className="flex items-center justify-between">
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
               <Clock3 size={22} />
             </div>
 
-            <span className="rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-600">
+            <span className="rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-700">
               In Progress
             </span>
           </div>
@@ -177,13 +181,13 @@ export default function PayrollPage() {
         </div>
 
         {/* Draft */}
-        <div className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg">
+        <div className="group rounded-2xl border border-slate-200 bg-white p-5 transition duration-200 hover:-translate-y-1 hover:border-blue-200">
           <div className="flex items-center justify-between">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-violet-50 text-violet-600">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-100 text-slate-700">
               <CalendarDays size={22} />
             </div>
 
-            <span className="rounded-full bg-violet-50 px-2.5 py-1 text-xs font-semibold text-violet-600">
+            <span className="rounded-full bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-700">
               Pending
             </span>
           </div>
@@ -204,40 +208,48 @@ export default function PayrollPage() {
 
       {/* Payroll Overview */}
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
-        {/* Payroll Amount */}
-        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+
+        {/* Total Payroll */}
+        <div className="rounded-3xl border border-slate-200 bg-white p-6 transition hover:border-blue-200">
           <div className="flex items-start justify-between">
             <div>
               <p className="text-sm font-medium text-slate-500">
-                Current Payroll
+                Total Payroll
               </p>
 
               <h2 className="mt-2 text-3xl font-bold text-slate-900">
                 ₹43.20L
               </h2>
 
-              <div className="mt-3 inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-600">
-                <ArrowUpRight size={14} />
-                8.4%
-              </div>
+              <p className="mt-2 text-xs text-slate-400">
+                Current payroll period
+              </p>
             </div>
 
-            <div className="rounded-xl bg-indigo-50 p-3 text-indigo-600">
+            <div className="rounded-xl bg-blue-50 p-3 text-blue-600">
               <IndianRupee size={22} />
             </div>
           </div>
 
-          <div className="mt-6 h-2 overflow-hidden rounded-full bg-slate-100">
-            <div className="h-full w-[78%] rounded-full bg-indigo-600" />
-          </div>
+          <div className="mt-6">
+            <div className="flex items-center justify-between text-xs">
+              <span className="font-medium text-slate-500">
+                Payroll progress
+              </span>
 
-          <p className="mt-3 text-xs text-slate-400">
-            78% of payroll processing completed
-          </p>
+              <span className="font-bold text-slate-700">
+                78%
+              </span>
+            </div>
+
+            <div className="mt-2 h-2 overflow-hidden rounded-full bg-slate-100">
+              <div className="h-full w-[78%] rounded-full bg-blue-600" />
+            </div>
+          </div>
         </div>
 
         {/* Employees */}
-        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="rounded-3xl border border-slate-200 bg-white p-6 transition hover:border-blue-200">
           <div className="flex items-start justify-between">
             <div>
               <p className="text-sm font-medium text-slate-500">
@@ -253,172 +265,202 @@ export default function PayrollPage() {
               </p>
             </div>
 
-            <div className="rounded-xl bg-violet-50 p-3 text-violet-600">
+            <div className="rounded-xl bg-blue-50 p-3 text-blue-600">
               <Users size={22} />
             </div>
           </div>
 
           <div className="mt-6 flex items-center gap-3">
             <div className="h-2 flex-1 overflow-hidden rounded-full bg-slate-100">
-              <div className="h-full w-[94%] rounded-full bg-violet-500" />
+              <div className="h-full w-[94%] rounded-full bg-blue-600" />
             </div>
 
-            <span className="text-xs font-bold text-slate-600">94%</span>
+            <span className="text-xs font-bold text-slate-600">
+              94%
+            </span>
           </div>
         </div>
 
-        {/* Payroll Status */}
-        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-          <p className="text-sm font-medium text-slate-500">
-            Processing Status
-          </p>
+        {/* Payroll Alerts */}
+        <div className="rounded-3xl border border-slate-200 bg-white p-6 transition hover:border-blue-200">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm font-medium text-slate-500">
+                Payroll Alerts
+              </p>
 
-          <h2 className="mt-2 text-3xl font-bold text-slate-900">
-            On Track
-          </h2>
+              <h2 className="mt-2 text-3xl font-bold text-slate-900">
+                2
+              </h2>
+
+              <p className="mt-2 text-xs text-slate-400">
+                Items requiring payroll review
+              </p>
+            </div>
+
+            <div className="rounded-xl bg-amber-50 p-3 text-amber-600">
+              <AlertTriangle size={22} />
+            </div>
+          </div>
 
           <div className="mt-5 flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-50 text-emerald-600">
-              <CheckCircle2 size={20} />
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-amber-50 text-amber-600">
+              <AlertTriangle size={18} />
             </div>
 
             <div>
               <p className="text-sm font-semibold text-slate-700">
-                Payroll processing
+                Review before validation
               </p>
 
               <p className="text-xs text-slate-400">
-                No critical issues detected
+                Check employee payroll information
               </p>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Payrun Table */}
-      <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+      {/* Payruns */}
+      <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white">
+
+        {/* Header */}
         <div className="border-b border-slate-100 p-5 sm:p-6">
           <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-xl font-bold text-slate-900">
                   Payruns
                 </h2>
 
-                <span className="rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-semibold text-indigo-600">
-                  {payruns.length}
+                <span className="rounded-full bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-600">
+                  {filteredPayruns.length}
                 </span>
               </div>
 
               <p className="mt-1 text-sm text-slate-500">
-                View and manage payroll processing periods.
+                Manage payroll periods and payrun processing.
               </p>
             </div>
 
-            <div className="flex h-11 w-full items-center rounded-xl border border-slate-200 bg-slate-50 px-3 transition focus-within:border-indigo-400 focus-within:bg-white focus-within:ring-4 focus-within:ring-indigo-50 xl:w-72">
-              <Search size={18} className="shrink-0 text-slate-400" />
+            <div className="flex flex-col gap-3 sm:flex-row">
 
-              <input
-                type="text"
-                placeholder="Search payrun..."
-                className="ml-2 w-full bg-transparent text-sm text-slate-700 outline-none placeholder:text-slate-400"
-              />
+              {/* Search */}
+              <div className="flex h-11 w-full items-center rounded-xl border border-slate-200 bg-slate-50 px-3 transition focus-within:border-blue-400 focus-within:bg-white focus-within:ring-4 focus-within:ring-blue-50 sm:w-72">
+                <Search size={18} className="shrink-0 text-slate-400" />
+
+                <input
+                  type="text"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Search payrun..."
+                  className="ml-2 w-full bg-transparent text-sm text-slate-700 outline-none placeholder:text-slate-400"
+                />
+              </div>
+
+              {/* State Filter */}
+              <select
+                value={stateFilter}
+                onChange={(e) => setStateFilter(e.target.value)}
+                className="h-11 rounded-xl border border-slate-200 bg-slate-50 px-4 text-sm font-medium text-slate-600 outline-none transition focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-50"
+              >
+                <option value="All">All States</option>
+                <option value="Draft">Draft</option>
+                <option value="Processing">Processing</option>
+                <option value="Done">Done</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
             </div>
           </div>
         </div>
 
         {/* Desktop Table */}
         <div className="hidden overflow-x-auto lg:block">
-          <table className="w-full min-w-[1000px]">
+          <table className="w-full min-w-[950px]">
+
             <thead>
               <tr className="border-b border-slate-100 bg-slate-50/80">
                 <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-500">
-                  Payroll Period
+                  Payrun
                 </th>
 
                 <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-500">
-                  Salary Structure
+                  Period Start
                 </th>
 
                 <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-500">
-                  Employees
+                  Period End
                 </th>
 
                 <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-500">
-                  Amount
+                  Payslips
                 </th>
 
                 <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-500">
-                  Status
+                  State
+                </th>
+
+                <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-500">
+                  Action
                 </th>
               </tr>
             </thead>
 
             <tbody>
-              {payruns.map((payrun) => (
+              {filteredPayruns.map((payrun) => (
                 <tr
                   key={payrun.id}
-                  className="border-b border-slate-100 transition hover:bg-indigo-50/30"
+                  className="border-b border-slate-100 transition hover:bg-blue-50/30"
                 >
                   <td className="px-6 py-5">
                     <div className="flex items-center gap-3">
-                      <div className="rounded-xl bg-indigo-50 p-2.5 text-indigo-600">
-                        <CalendarDays size={18} />
+                      <div className="rounded-xl bg-blue-50 p-2.5 text-blue-600">
+                        <FileText size={18} />
                       </div>
 
                       <div>
                         <p className="font-semibold text-slate-900">
-                          {payrun.period}
+                          {payrun.name}
                         </p>
 
                         <p className="mt-0.5 text-xs text-slate-400">
-                          Created {payrun.created}
+                          Payroll processing
                         </p>
                       </div>
                     </div>
                   </td>
 
-                  <td className="px-6 py-5">
-                    <span className="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-600">
-                      {payrun.structure}
-                    </span>
+                  <td className="px-6 py-5 text-sm font-medium text-slate-700">
+                    {payrun.dateStart}
+                  </td>
+
+                  <td className="px-6 py-5 text-sm font-medium text-slate-700">
+                    {payrun.dateEnd}
                   </td>
 
                   <td className="px-6 py-5">
                     <div className="flex items-center gap-2 text-sm font-semibold text-slate-700">
-                      <Users size={16} className="text-indigo-500" />
-                      {payrun.employees}
+                      <FileText size={16} className="text-blue-500" />
+                      {payrun.payslips}
                     </div>
                   </td>
 
                   <td className="px-6 py-5">
-                    <p className="font-bold text-slate-900">
-                      {payrun.amount}
-                    </p>
+                    <span
+                      className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-bold ${getStateStyle(
+                        payrun.state
+                      )}`}
+                    >
+                      <span className="h-1.5 w-1.5 rounded-full bg-current" />
+                      {payrun.state}
+                    </span>
                   </td>
 
                   <td className="px-6 py-5">
-                    <span
-                      className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-bold ${
-                        payrun.status === "Paid"
-                          ? "bg-emerald-50 text-emerald-600"
-                          : payrun.status === "Processing"
-                            ? "bg-amber-50 text-amber-600"
-                            : "bg-slate-100 text-slate-600"
-                      }`}
-                    >
-                      <span
-                        className={`h-1.5 w-1.5 rounded-full ${
-                          payrun.status === "Paid"
-                            ? "bg-emerald-500"
-                            : payrun.status === "Processing"
-                              ? "bg-amber-500"
-                              : "bg-slate-400"
-                        }`}
-                      />
-
-                      {payrun.status}
-                    </span>
+                    <button className="inline-flex items-center rounded-lg border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-600 transition hover:border-blue-200 hover:bg-blue-50 hover:text-blue-600">
+                      View
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -428,62 +470,89 @@ export default function PayrollPage() {
 
         {/* Mobile Cards */}
         <div className="divide-y divide-slate-100 lg:hidden">
-          {payruns.map((payrun) => (
+          {filteredPayruns.map((payrun) => (
             <div
               key={payrun.id}
-              className="p-5 transition hover:bg-slate-50 sm:p-6"
+              className="p-5 transition hover:bg-blue-50/20 sm:p-6"
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <p className="font-bold text-slate-900">
-                    {payrun.period}
-                  </p>
+                  <div className="flex items-center gap-2">
+                    <div className="rounded-lg bg-blue-50 p-2 text-blue-600">
+                      <FileText size={16} />
+                    </div>
 
-                  <p className="mt-1 text-xs text-slate-500">
-                    {payrun.structure}
+                    <p className="font-bold text-slate-900">
+                      {payrun.name}
+                    </p>
+                  </div>
+
+                  <p className="mt-2 text-xs text-slate-500">
+                    {payrun.dateStart} → {payrun.dateEnd}
                   </p>
                 </div>
 
                 <span
-                  className={`rounded-full px-2.5 py-1 text-xs font-bold ${
-                    payrun.status === "Paid"
-                      ? "bg-emerald-50 text-emerald-600"
-                      : payrun.status === "Processing"
-                        ? "bg-amber-50 text-amber-600"
-                        : "bg-slate-100 text-slate-600"
-                  }`}
+                  className={`rounded-full px-2.5 py-1 text-xs font-bold ${getStateStyle(
+                    payrun.state
+                  )}`}
                 >
-                  {payrun.status}
+                  {payrun.state}
                 </span>
               </div>
 
               <div className="mt-5 grid grid-cols-2 gap-3">
                 <div className="rounded-xl bg-slate-50 p-3">
-                  <p className="text-xs text-slate-400">Employees</p>
+                  <p className="text-xs text-slate-400">
+                    Payslips
+                  </p>
 
                   <p className="mt-1 font-bold text-slate-800">
-                    {payrun.employees}
+                    {payrun.payslips}
                   </p>
                 </div>
 
                 <div className="rounded-xl bg-slate-50 p-3">
-                  <p className="text-xs text-slate-400">Payroll Amount</p>
+                  <p className="text-xs text-slate-400">
+                    Period
+                  </p>
 
                   <p className="mt-1 font-bold text-slate-800">
-                    {payrun.amount}
+                    {payrun.dateStart}
                   </p>
                 </div>
               </div>
+
+              <button className="mt-4 w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-600 transition hover:border-blue-200 hover:bg-blue-50 hover:text-blue-600">
+                View Payrun
+              </button>
             </div>
           ))}
         </div>
+
+        {/* Empty State */}
+        {filteredPayruns.length === 0 && (
+          <div className="px-6 py-14 text-center">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 text-slate-400">
+              <Search size={24} />
+            </div>
+
+            <h3 className="mt-4 text-base font-bold text-slate-900">
+              No payruns found
+            </h3>
+
+            <p className="mt-1 text-sm text-slate-500">
+              Try changing your search or state filter.
+            </p>
+          </div>
+        )}
 
         {/* Footer */}
         <div className="border-t border-slate-100 bg-slate-50/50 px-5 py-4 sm:px-6">
           <p className="text-sm text-slate-500">
             Showing{" "}
             <span className="font-bold text-slate-700">
-              {payruns.length}
+              {filteredPayruns.length}
             </span>{" "}
             payruns
           </p>
@@ -492,3 +561,4 @@ export default function PayrollPage() {
     </div>
   );
 }
+

@@ -1,5 +1,7 @@
+
 "use client";
 
+import { useState } from "react";
 import {
   Search,
   CalendarDays,
@@ -8,118 +10,144 @@ import {
   XCircle,
   Users,
   Plane,
+  FileText,
 } from "lucide-react";
 import Link from "next/link";
-const leaveRecords = [
-  {
-    id: 1,
-    employee: "Neha Desai",
-    department: "Marketing",
-    leaveType: "Paid Time Off",
-    startDate: "08 Sep 2026",
-    endDate: "10 Sep 2026",
-    days: 3,
-    status: "Approved",
-  },
-  {
-    id: 2,
-    employee: "Rahul Mehta",
-    department: "Finance",
-    leaveType: "Sick Leave",
-    startDate: "07 Sep 2026",
-    endDate: "07 Sep 2026",
-    days: 1,
-    status: "Pending",
-  },
-  {
-    id: 3,
-    employee: "Aarav Patel",
-    department: "Engineering",
-    leaveType: "Casual Leave",
-    startDate: "15 Sep 2026",
-    endDate: "16 Sep 2026",
-    days: 2,
-    status: "Approved",
-  },
-  {
-    id: 4,
-    employee: "Priya Shah",
-    department: "Human Resources",
-    leaveType: "Paid Time Off",
-    startDate: "20 Sep 2026",
-    endDate: "22 Sep 2026",
-    days: 3,
-    status: "Pending",
-  },
-  {
-    id: 5,
-    employee: "Riya Mehta",
-    department: "Sales",
-    leaveType: "Casual Leave",
-    startDate: "03 Sep 2026",
-    endDate: "04 Sep 2026",
-    days: 2,
-    status: "Refused",
-  },
-];
+
+type LeaveRecord = {
+  id: number;
+  employee_id: string;
+  employee: string;
+  time_off_type_id: string;
+  leaveType: string;
+  start_date: string;
+  end_date: string;
+  days: number;
+  reason: string;
+  state: string;
+};
+
+const leaveRecords: LeaveRecord[] = [];
 
 export default function TimeOffPage() {
+  const [search, setSearch] = useState("");
+  const [stateFilter, setStateFilter] = useState("All States");
+  const [typeFilter, setTypeFilter] = useState("All Types");
+
   const approvedCount = leaveRecords.filter(
-    (leave) => leave.status === "Approved"
+    (leave) => leave.state === "Approved"
   ).length;
 
-  const pendingCount = leaveRecords.filter(
-    (leave) => leave.status === "Pending"
+  const submittedCount = leaveRecords.filter(
+    (leave) => leave.state === "Submitted"
   ).length;
 
-  const refusedCount = leaveRecords.filter(
-    (leave) => leave.status === "Refused"
+  const rejectedCount = leaveRecords.filter(
+    (leave) => leave.state === "Rejected"
   ).length;
 
-  const totalDays = leaveRecords
-    .filter((leave) => leave.status === "Approved")
+  const approvedDays = leaveRecords
+    .filter((leave) => leave.state === "Approved")
     .reduce((total, leave) => total + leave.days, 0);
+
+  const filteredLeaves = leaveRecords.filter((leave) => {
+    const searchValue = search.toLowerCase();
+
+    const matchesSearch =
+      leave.employee.toLowerCase().includes(searchValue) ||
+      leave.employee_id.toLowerCase().includes(searchValue) ||
+      leave.time_off_type_id.toLowerCase().includes(searchValue);
+
+    const matchesState =
+      stateFilter === "All States" || leave.state === stateFilter;
+
+    const matchesType =
+      typeFilter === "All Types" || leave.leaveType === typeFilter;
+
+    return matchesSearch && matchesState && matchesType;
+  });
+
+  const getStateStyle = (state: string) => {
+    switch (state) {
+      case "Approved":
+        return {
+          badge: "bg-blue-50 text-blue-700 border border-blue-100",
+          dot: "bg-blue-600",
+        };
+
+      case "Submitted":
+        return {
+          badge: "bg-amber-50 text-amber-700 border border-amber-100",
+          dot: "bg-amber-500",
+        };
+
+      case "Rejected":
+        return {
+          badge: "bg-rose-50 text-rose-700 border border-rose-100",
+          dot: "bg-rose-500",
+        };
+
+      case "Draft":
+        return {
+          badge: "bg-slate-100 text-slate-600 border border-slate-200",
+          dot: "bg-slate-500",
+        };
+
+      default:
+        return {
+          badge: "bg-slate-100 text-slate-600 border border-slate-200",
+          dot: "bg-slate-400",
+        };
+    }
+  };
 
   return (
     <div className="min-h-full space-y-6 pb-8">
-      {/* Header */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-600 via-indigo-600 to-violet-700 p-6 text-white shadow-xl shadow-indigo-100 sm:p-8">
-        <div className="absolute -right-16 -top-20 h-56 w-56 rounded-full bg-white/10" />
-        <div className="absolute -bottom-24 right-24 h-48 w-48 rounded-full bg-white/5" />
+      {/* ================= HEADER ================= */}
 
-        <div className="relative z-10">
-          <div className="mb-3 flex items-center gap-2 text-sm font-medium text-indigo-100">
-            <Plane size={17} />
-            Employee Leave Management
+      <div className="relative overflow-hidden rounded-3xl bg-slate-900 p-6 text-white shadow-xl shadow-slate-200 sm:p-8">
+        <div className="absolute -right-16 -top-20 h-56 w-56 rounded-full bg-blue-600/20" />
+        <div className="absolute -bottom-24 right-24 h-48 w-48 rounded-full bg-blue-500/10" />
+        <div className="absolute right-1/3 top-0 h-32 w-32 rounded-full bg-white/5" />
+
+        <div className="relative z-10 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <div className="mb-3 flex items-center gap-2 text-sm font-medium text-slate-300">
+              <Plane size={17} />
+              Employee Leave Management
+            </div>
+
+            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
+              Time Off
+            </h1>
+
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300 sm:text-base">
+              Manage time off requests, leave types, allocations, balances
+              and employee leave approvals.
+            </p>
           </div>
 
-          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            Time Off
-          </h1>
-
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-indigo-100 sm:text-base">
-            Manage employee leave requests, approvals, leave types and time
-            off balances.
-          </p>
+          <Link
+            href="/TimeOff/new"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-blue-900/20 transition hover:-translate-y-0.5 hover:bg-blue-700 sm:w-auto"
+          >
+            + New Leave Request
+          </Link>
         </div>
-        <Link
-  href="/TimeOff/new"
-  className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-bold text-indigo-700 shadow-lg transition hover:-translate-y-0.5 hover:bg-indigo-50"
->
-  + New Leave Request
-</Link>
       </div>
 
-      {/* Statistics */}
+      {/* ================= STATISTICS ================= */}
+
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {/* Total Requests */}
-        <div className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg">
+
+        <div className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg">
           <div className="flex items-center justify-between">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600 transition group-hover:scale-105">
               <CalendarDays size={22} />
             </div>
 
-            <span className="rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-semibold text-indigo-600">
+            <span className="rounded-full bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-700">
               All
             </span>
           </div>
@@ -133,24 +161,25 @@ export default function TimeOffPage() {
           </p>
 
           <p className="mt-2 text-xs text-slate-400">
-            Total leave requests
+            Total time off requests
           </p>
         </div>
 
         {/* Approved */}
-        <div className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg">
+
+        <div className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg">
           <div className="flex items-center justify-between">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600 transition group-hover:scale-105">
               <CheckCircle2 size={22} />
             </div>
 
-            <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-600">
+            <span className="rounded-full bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-700">
               Approved
             </span>
           </div>
 
           <p className="mt-5 text-sm font-medium text-slate-500">
-            Approved
+            Approved Requests
           </p>
 
           <p className="mt-1 text-3xl font-bold text-slate-900">
@@ -162,24 +191,25 @@ export default function TimeOffPage() {
           </p>
         </div>
 
-        {/* Pending */}
-        <div className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg">
+        {/* Submitted */}
+
+        <div className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg">
           <div className="flex items-center justify-between">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-50 text-amber-600 transition group-hover:scale-105">
               <Clock3 size={22} />
             </div>
 
-            <span className="rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-600">
+            <span className="rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-700">
               Action Needed
             </span>
           </div>
 
           <p className="mt-5 text-sm font-medium text-slate-500">
-            Pending
+            Submitted Requests
           </p>
 
           <p className="mt-1 text-3xl font-bold text-slate-900">
-            {pendingCount}
+            {submittedCount}
           </p>
 
           <p className="mt-2 text-xs text-slate-400">
@@ -188,13 +218,14 @@ export default function TimeOffPage() {
         </div>
 
         {/* Approved Days */}
-        <div className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg">
+
+        <div className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg">
           <div className="flex items-center justify-between">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-violet-50 text-violet-600">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-100 text-slate-600 transition group-hover:scale-105">
               <Users size={22} />
             </div>
 
-            <span className="rounded-full bg-violet-50 px-2.5 py-1 text-xs font-semibold text-violet-600">
+            <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-600">
               Days
             </span>
           </div>
@@ -204,7 +235,7 @@ export default function TimeOffPage() {
           </p>
 
           <p className="mt-1 text-3xl font-bold text-slate-900">
-            {totalDays}
+            {approvedDays}
           </p>
 
           <p className="mt-2 text-xs text-slate-400">
@@ -213,9 +244,11 @@ export default function TimeOffPage() {
         </div>
       </div>
 
-      {/* Leave Requests */}
+      {/* ================= LEAVE REQUESTS ================= */}
+
       <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
-        {/* Top Section */}
+        {/* TOOLBAR */}
+
         <div className="border-b border-slate-100 p-5 sm:p-6">
           <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
             <div>
@@ -224,36 +257,49 @@ export default function TimeOffPage() {
                   Leave Requests
                 </h2>
 
-                <span className="rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-semibold text-indigo-600">
-                  {leaveRecords.length}
+                <span className="rounded-full bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-700">
+                  {filteredLeaves.length}
                 </span>
               </div>
 
               <p className="mt-1 text-sm text-slate-500">
-                Review employee leave requests and their approval status.
+                Review employee requests, leave type, duration and approval
+                state.
               </p>
             </div>
 
-            {/* Search + Filters */}
+            {/* SEARCH + FILTERS */}
+
             <div className="flex w-full flex-col gap-3 sm:flex-row xl:w-auto">
-              <div className="flex h-11 w-full items-center rounded-xl border border-slate-200 bg-slate-50 px-3 transition focus-within:border-indigo-400 focus-within:bg-white focus-within:ring-4 focus-within:ring-indigo-50 sm:w-72">
+              <div className="flex h-11 w-full items-center rounded-xl border border-slate-200 bg-slate-50 px-3 transition focus-within:border-blue-400 focus-within:bg-white focus-within:ring-4 focus-within:ring-blue-50 sm:w-72">
                 <Search size={18} className="shrink-0 text-slate-400" />
 
                 <input
                   type="text"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search employee..."
                   className="ml-2 w-full bg-transparent text-sm text-slate-700 outline-none placeholder:text-slate-400"
                 />
               </div>
 
-              <select className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 text-sm font-medium text-slate-600 outline-none transition focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-50 sm:w-40">
-                <option>All Status</option>
+              <select
+                value={stateFilter}
+                onChange={(e) => setStateFilter(e.target.value)}
+                className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 text-sm font-medium text-slate-600 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50 sm:w-40"
+              >
+                <option>All States</option>
+                <option>Draft</option>
+                <option>Submitted</option>
                 <option>Approved</option>
-                <option>Pending</option>
-                <option>Refused</option>
+                <option>Rejected</option>
               </select>
 
-              <select className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 text-sm font-medium text-slate-600 outline-none transition focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-50 sm:w-40">
+              <select
+                value={typeFilter}
+                onChange={(e) => setTypeFilter(e.target.value)}
+                className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 text-sm font-medium text-slate-600 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50 sm:w-40"
+              >
                 <option>All Types</option>
                 <option>Paid Time Off</option>
                 <option>Sick Leave</option>
@@ -263,9 +309,10 @@ export default function TimeOffPage() {
           </div>
         </div>
 
-        {/* Desktop Table */}
+        {/* ================= DESKTOP TABLE ================= */}
+
         <div className="hidden overflow-x-auto lg:block">
-          <table className="w-full min-w-[1100px]">
+          <table className="w-full min-w-[1150px]">
             <thead>
               <tr className="border-b border-slate-100 bg-slate-50/80">
                 <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-500">
@@ -273,7 +320,7 @@ export default function TimeOffPage() {
                 </th>
 
                 <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-500">
-                  Leave Type
+                  Time Off Type
                 </th>
 
                 <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-500">
@@ -285,201 +332,263 @@ export default function TimeOffPage() {
                 </th>
 
                 <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-500">
-                  Status
+                  Reason
+                </th>
+
+                <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-500">
+                  State
                 </th>
               </tr>
             </thead>
 
             <tbody>
-              {leaveRecords.map((leave) => (
-                <tr
-                  key={leave.id}
-                  className="group border-b border-slate-100 transition hover:bg-indigo-50/30"
-                >
-                  {/* Employee */}
-                  <td className="px-6 py-5">
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-violet-600 text-sm font-bold text-white shadow-sm">
-                        {leave.employee.charAt(0)}
-                      </div>
+              {filteredLeaves.map((leave) => {
+                const stateStyle = getStateStyle(leave.state);
 
+                return (
+                  <tr
+                    key={leave.id}
+                    className="group border-b border-slate-100 transition hover:bg-blue-50/30"
+                  >
+                    {/* Employee */}
+
+                    <td className="px-6 py-5">
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-slate-900 text-sm font-bold text-white shadow-sm">
+                          {leave.employee.charAt(0)}
+                        </div>
+
+                        <div>
+                          <p className="font-semibold text-slate-900">
+                            {leave.employee}
+                          </p>
+
+                          <p className="mt-0.5 text-xs text-slate-500">
+                            {leave.employee_id}
+                          </p>
+                        </div>
+                      </div>
+                    </td>
+
+                    {/* Time Off Type */}
+
+                    <td className="px-6 py-5">
                       <div>
-                        <p className="font-semibold text-slate-900">
-                          {leave.employee}
-                        </p>
+                        <span className="inline-flex rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-600">
+                          {leave.leaveType}
+                        </span>
 
-                        <p className="mt-0.5 text-xs text-slate-500">
-                          {leave.department}
+                        <p className="mt-1 text-xs text-slate-400">
+                          Code: {leave.time_off_type_id}
                         </p>
                       </div>
-                    </div>
-                  </td>
+                    </td>
 
-                  {/* Leave Type */}
-                  <td className="px-6 py-5">
-                    <span className="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-600">
-                      {leave.leaveType}
-                    </span>
-                  </td>
+                    {/* Period */}
 
-                  {/* Period */}
-                  <td className="px-6 py-5">
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2 text-sm font-medium text-slate-700">
-                        <CalendarDays
-                          size={15}
-                          className="text-indigo-500"
-                        />
-                        {leave.startDate}
+                    <td className="px-6 py-5">
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2 text-sm font-medium text-slate-700">
+                          <CalendarDays
+                            size={15}
+                            className="text-blue-600"
+                          />
+                          {leave.start_date}
+                        </div>
+
+                        <p className="pl-5 text-xs text-slate-400">
+                          to {leave.end_date}
+                        </p>
                       </div>
+                    </td>
 
-                      <p className="pl-5 text-xs text-slate-400">
-                        to {leave.endDate}
-                      </p>
-                    </div>
-                  </td>
+                    {/* Days */}
 
-                  {/* Days */}
-                  <td className="px-6 py-5">
-                    <span className="font-bold text-slate-800">
-                      {leave.days}{" "}
-                      <span className="text-xs font-normal text-slate-400">
-                        {leave.days === 1 ? "day" : "days"}
+                    <td className="px-6 py-5">
+                      <span className="font-bold text-slate-900">
+                        {leave.days}{" "}
+                        <span className="text-xs font-normal text-slate-400">
+                          {leave.days === 1 ? "day" : "days"}
+                        </span>
                       </span>
-                    </span>
-                  </td>
+                    </td>
 
-                  {/* Status */}
-                  <td className="px-6 py-5">
-                    <span
-                      className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-bold ${
-                        leave.status === "Approved"
-                          ? "bg-emerald-50 text-emerald-600"
-                          : leave.status === "Pending"
-                            ? "bg-amber-50 text-amber-600"
-                            : "bg-rose-50 text-rose-600"
-                      }`}
-                    >
+                    {/* Reason */}
+
+                    <td className="max-w-[220px] px-6 py-5">
+                      <div className="flex items-start gap-2">
+                        <FileText
+                          size={15}
+                          className="mt-0.5 shrink-0 text-slate-400"
+                        />
+
+                        <p className="text-sm text-slate-600">
+                          {leave.reason}
+                        </p>
+                      </div>
+                    </td>
+
+                    {/* State */}
+
+                    <td className="px-6 py-5">
                       <span
-                        className={`h-1.5 w-1.5 rounded-full ${
-                          leave.status === "Approved"
-                            ? "bg-emerald-500"
-                            : leave.status === "Pending"
-                              ? "bg-amber-500"
-                              : "bg-rose-500"
-                        }`}
-                      />
+                        className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold ${stateStyle.badge}`}
+                      >
+                        <span
+                          className={`h-1.5 w-1.5 rounded-full ${stateStyle.dot}`}
+                        />
 
-                      {leave.status}
-                    </span>
-                  </td>
-                </tr>
-              ))}
+                        {leave.state}
+                      </span>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
 
-        {/* Mobile Cards */}
+        {/* ================= MOBILE CARDS ================= */}
+
         <div className="divide-y divide-slate-100 lg:hidden">
-          {leaveRecords.map((leave) => (
-            <div
-              key={leave.id}
-              className="p-5 transition hover:bg-slate-50 sm:p-6"
-            >
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex min-w-0 items-center gap-3">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-violet-600 text-sm font-bold text-white">
-                    {leave.employee.charAt(0)}
+          {filteredLeaves.map((leave) => {
+            const stateStyle = getStateStyle(leave.state);
+
+            return (
+              <div
+                key={leave.id}
+                className="p-5 transition hover:bg-slate-50 sm:p-6"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex min-w-0 items-center gap-3">
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-slate-900 text-sm font-bold text-white">
+                      {leave.employee.charAt(0)}
+                    </div>
+
+                    <div className="min-w-0">
+                      <p className="truncate font-semibold text-slate-900">
+                        {leave.employee}
+                      </p>
+
+                      <p className="truncate text-xs text-slate-500">
+                        {leave.employee_id}
+                      </p>
+                    </div>
                   </div>
 
-                  <div className="min-w-0">
-                    <p className="truncate font-semibold text-slate-900">
-                      {leave.employee}
-                    </p>
-
-                    <p className="truncate text-xs text-slate-500">
-                      {leave.department}
-                    </p>
-                  </div>
+                  <span
+                    className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-bold ${stateStyle.badge}`}
+                  >
+                    {leave.state}
+                  </span>
                 </div>
 
-                <span
-                  className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-bold ${
-                    leave.status === "Approved"
-                      ? "bg-emerald-50 text-emerald-600"
-                      : leave.status === "Pending"
-                        ? "bg-amber-50 text-amber-600"
-                        : "bg-rose-50 text-rose-600"
-                  }`}
-                >
-                  {leave.status}
-                </span>
-              </div>
-
-              <div className="mt-5 space-y-3">
-                <div className="rounded-xl bg-slate-50 p-3">
-                  <p className="text-xs text-slate-400">
-                    Leave Type
-                  </p>
-
-                  <p className="mt-1 text-sm font-semibold text-slate-700">
-                    {leave.leaveType}
-                  </p>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="rounded-xl bg-slate-50 p-3">
-                    <p className="text-xs text-slate-400">
-                      Start Date
-                    </p>
-
-                    <p className="mt-1 text-sm font-semibold text-slate-700">
-                      {leave.startDate}
-                    </p>
-                  </div>
+                <div className="mt-5 space-y-3">
+                  {/* Type */}
 
                   <div className="rounded-xl bg-slate-50 p-3">
                     <p className="text-xs text-slate-400">
-                      End Date
+                      Time Off Type
                     </p>
 
                     <p className="mt-1 text-sm font-semibold text-slate-700">
-                      {leave.endDate}
+                      {leave.leaveType}
+                    </p>
+
+                    <p className="mt-1 text-xs text-slate-400">
+                      Code: {leave.time_off_type_id}
+                    </p>
+                  </div>
+
+                  {/* Dates */}
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="rounded-xl bg-slate-50 p-3">
+                      <p className="text-xs text-slate-400">
+                        Start Date
+                      </p>
+
+                      <p className="mt-1 text-sm font-semibold text-slate-700">
+                        {leave.start_date}
+                      </p>
+                    </div>
+
+                    <div className="rounded-xl bg-slate-50 p-3">
+                      <p className="text-xs text-slate-400">
+                        End Date
+                      </p>
+
+                      <p className="mt-1 text-sm font-semibold text-slate-700">
+                        {leave.end_date}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Days */}
+
+                  <div className="rounded-xl bg-slate-50 p-3">
+                    <p className="text-xs text-slate-400">
+                      Leave Duration
+                    </p>
+
+                    <p className="mt-1 text-sm font-bold text-slate-900">
+                      {leave.days}{" "}
+                      {leave.days === 1 ? "day" : "days"}
+                    </p>
+                  </div>
+
+                  {/* Reason */}
+
+                  <div className="rounded-xl bg-slate-50 p-3">
+                    <p className="text-xs text-slate-400">
+                      Reason
+                    </p>
+
+                    <p className="mt-1 text-sm text-slate-600">
+                      {leave.reason}
                     </p>
                   </div>
                 </div>
-
-                <div className="rounded-xl bg-slate-50 p-3">
-                  <p className="text-xs text-slate-400">
-                    Leave Duration
-                  </p>
-
-                  <p className="mt-1 text-sm font-bold text-slate-800">
-                    {leave.days}{" "}
-                    {leave.days === 1 ? "day" : "days"}
-                  </p>
-                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
-        {/* Footer */}
+        {/* ================= EMPTY STATE ================= */}
+
+        {filteredLeaves.length === 0 && (
+          <div className="px-6 py-16 text-center">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-slate-100 text-slate-400">
+              <CalendarDays size={24} />
+            </div>
+
+            <h3 className="mt-4 text-base font-bold text-slate-900">
+              No leave requests found
+            </h3>
+
+            <p className="mt-1 text-sm text-slate-500">
+              Try changing your search or filters.
+            </p>
+          </div>
+        )}
+
+        {/* ================= FOOTER ================= */}
+
         <div className="flex flex-col gap-3 border-t border-slate-100 bg-slate-50/50 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <div className="flex items-center gap-2 text-sm text-slate-500">
-            <CalendarDays size={16} />
+            <Users size={16} />
 
             Showing
 
             <span className="font-bold text-slate-700">
-              {leaveRecords.length}
+              {filteredLeaves.length}
             </span>
 
             leave requests
           </div>
 
           <div className="text-xs text-slate-400">
-            Approved leave affects employee leave balance
+            Approved leave updates the employee leave balance
           </div>
         </div>
       </div>

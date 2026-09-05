@@ -1,3 +1,8 @@
+
+"use client";
+
+import { useEffect, useState } from "react";
+
 import {
   Users,
   UserCheck,
@@ -8,45 +13,97 @@ import {
   ArrowUpRight,
 } from "lucide-react";
 
-const stats = [
-  {
-    title: "Total Employees",
-    value: "248",
-    change: "+12.5%",
-    description: "vs last month",
-    icon: Users,
-    trend: "up",
-  },
-  {
-    title: "Present Today",
-    value: "221",
-    change: "89.1%",
-    description: "attendance rate",
-    icon: UserCheck,
-    trend: "up",
-  },
-  {
-    title: "Pending Leaves",
-    value: "18",
-    change: "-4.2%",
-    description: "vs last month",
-    icon: Clock3,
-    trend: "down",
-  },
-  {
-    title: "Monthly Payroll",
-    value: "₹42.8L",
-    change: "+8.4%",
-    description: "vs last month",
-    icon: WalletCards,
-    trend: "up",
-  },
-];
-
 export default function DashboardPage() {
+  const [stats, setStats] = useState([
+    {
+      title: "Total Employees",
+      value: "0",
+      change: "—",
+      description: "current employees",
+      icon: Users,
+      trend: "up",
+    },
+    {
+      title: "Present Today",
+      value: "0",
+      change: "—",
+      description: "attendance rate",
+      icon: UserCheck,
+      trend: "up",
+    },
+    {
+      title: "Pending Leaves",
+      value: "0",
+      change: "—",
+      description: "pending requests",
+      icon: Clock3,
+      trend: "up",
+    },
+    {
+      title: "Monthly Payroll",
+      value: "₹0",
+      change: "—",
+      description: "current payrun",
+      icon: WalletCards,
+      trend: "up",
+    },
+  ]);
+
+  useEffect(() => {
+    const fetchDashboard = async () => {
+      try {
+        const response = await fetch("/api/dashboard");
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch dashboard data");
+        }
+
+        const data = await response.json();
+
+        setStats([
+          {
+            title: "Total Employees",
+            value: data.totalEmployees?.toString() ?? "0",
+            change: "—",
+            description: "current employees",
+            icon: Users,
+            trend: "up",
+          },
+          {
+            title: "Present Today",
+            value: data.presentToday?.toString() ?? "0",
+            change: `${data.attendanceRate ?? 0}%`,
+            description: "attendance rate",
+            icon: UserCheck,
+            trend: "up",
+          },
+          {
+            title: "Pending Leaves",
+            value: data.pendingLeaves?.toString() ?? "0",
+            change: "—",
+            description: "pending requests",
+            icon: Clock3,
+            trend: "up",
+          },
+          {
+            title: "Monthly Payroll",
+            value: `₹${((data.monthlyPayroll ?? 0) / 100000).toFixed(2)}L`,
+            change: "—",
+            description: "current payrun",
+            icon: WalletCards,
+            trend: "up",
+          },
+        ]);
+      } catch (error) {
+        console.error("Dashboard error:", error);
+      }
+    };
+
+    fetchDashboard();
+  }, []);
+
   return (
     <div className="space-y-8">
-
       {/* Header */}
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
@@ -79,11 +136,9 @@ export default function DashboardPage() {
               key={stat.title}
               className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
             >
-              {/* Decorative background */}
               <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-indigo-50 transition-transform duration-300 group-hover:scale-150" />
 
               <div className="relative">
-                {/* Top row */}
                 <div className="flex items-center justify-between">
                   <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
                     <Icon size={21} />
@@ -106,7 +161,6 @@ export default function DashboardPage() {
                   </span>
                 </div>
 
-                {/* Value */}
                 <div className="mt-6">
                   <p className="text-sm font-medium text-slate-500">
                     {stat.title}
@@ -126,9 +180,8 @@ export default function DashboardPage() {
         })}
       </div>
 
-      {/* Temporary dashboard sections */}
+      {/* Attendance Overview */}
       <div className="grid gap-5 lg:grid-cols-2">
-
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
           <h2 className="text-lg font-bold text-slate-900">
             Attendance Overview
@@ -145,6 +198,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
+        {/* Payroll Overview */}
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
           <h2 className="text-lg font-bold text-slate-900">
             Payroll Overview
@@ -160,7 +214,6 @@ export default function DashboardPage() {
             </p>
           </div>
         </div>
-
       </div>
     </div>
   );

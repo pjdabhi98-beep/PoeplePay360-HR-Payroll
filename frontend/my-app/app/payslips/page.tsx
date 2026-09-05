@@ -1,5 +1,7 @@
+
 "use client";
 
+import { useEffect, useState } from "react";
 import {
   Search,
   FileText,
@@ -12,211 +14,283 @@ import {
   Users,
 } from "lucide-react";
 
-const payslips = [
-  {
-    id: 1,
-    employee: "Aarav Patel",
-    period: "August 2026",
-    basic: "₹50,000",
-    allowances: "₹15,000",
-    deductions: "₹5,000",
-    gross: "₹65,000",
-    net: "₹60,000",
-    status: "Validated",
-  },
-  {
-    id: 2,
-    employee: "Priya Shah",
-    period: "August 2026",
-    basic: "₹55,000",
-    allowances: "₹17,000",
-    deductions: "₹6,000",
-    gross: "₹72,000",
-    net: "₹66,000",
-    status: "Paid",
-  },
-  {
-    id: 3,
-    employee: "Rahul Mehta",
-    period: "August 2026",
-    basic: "₹45,000",
-    allowances: "₹13,000",
-    deductions: "₹5,000",
-    gross: "₹58,000",
-    net: "₹53,000",
-    status: "Paid",
-  },
-  {
-    id: 4,
-    employee: "Neha Desai",
-    period: "August 2026",
-    basic: "₹38,000",
-    allowances: "₹10,000",
-    deductions: "₹4,000",
-    gross: "₹48,000",
-    net: "₹44,000",
-    status: "Validated",
-  },
-];
+type Payslip = {
+  id: number;
+  name: string;
+  employee: string;
+  contract: string;
+  payrun: string;
+  dateFrom: string;
+  dateTo: string;
+  grossSalary: string;
+  totalDeduction: string;
+  netSalary: string;
+  state: string;
+  lines: {
+    name: string;
+    code: string;
+    type: string;
+    amount: string;
+  }[];
+};
+
+const [payslips, setPayslips] = useState<Payslip[]>([]);
+
+useEffect(() => {
+  const fetchPayslips = async () => {
+    const response = await fetch("/api/payslips");
+    const data = await response.json();
+
+    setPayslips(data);
+  };
+
+  fetchPayslips();
+}, []);
 
 export default function PayslipsPage() {
-  const totalPayslips = payslips.length;
+  const [search, setSearch] = useState("");
+  const [stateFilter, setStateFilter] = useState("All");
+  const [periodFilter, setPeriodFilter] = useState("August 2026");
 
-  const paidPayslips = payslips.filter(
-    (payslip) => payslip.status === "Paid"
+  const paidCount = payslips.filter(
+    (payslip) => payslip.state === "Paid"
   ).length;
 
-  const validatedPayslips = payslips.filter(
-    (payslip) => payslip.status === "Validated"
+  const computedCount = payslips.filter(
+    (payslip) => payslip.state === "Computed"
+  ).length;
+
+  const draftCount = payslips.filter(
+    (payslip) => payslip.state === "Draft"
   ).length;
 
   const totalNetSalary = payslips.reduce(
     (total, payslip) =>
-      total + Number(payslip.net.replace(/[₹,]/g, "")),
+      total + Number(payslip.netSalary.replace(/[₹,]/g, "")),
     0
   );
 
+  const filteredPayslips = payslips.filter((payslip) => {
+    const matchesSearch =
+      payslip.employee.toLowerCase().includes(search.toLowerCase()) ||
+      payslip.name.toLowerCase().includes(search.toLowerCase()) ||
+      payslip.contract.toLowerCase().includes(search.toLowerCase()) ||
+      payslip.payrun.toLowerCase().includes(search.toLowerCase());
+
+    const matchesState =
+      stateFilter === "All" || payslip.state === stateFilter;
+
+    const matchesPeriod =
+      periodFilter === "All" ||
+      payslip.dateFrom.includes(periodFilter.split(" ")[0]);
+
+    return matchesSearch && matchesState && matchesPeriod;
+  });
+
+  const getStateStyle = (state: string) => {
+    switch (state) {
+      case "Paid":
+        return "bg-emerald-50 text-emerald-700";
+      case "Computed":
+        return "bg-blue-50 text-blue-700";
+      case "Draft":
+        return "bg-slate-100 text-slate-600";
+      case "Cancelled":
+        return "bg-rose-50 text-rose-700";
+      default:
+        return "bg-slate-100 text-slate-600";
+    }
+  };
+
   return (
-    <div className="min-h-full space-y-6 pb-8">
+    <div className="min-h-full space-y-6 bg-slate-50 pb-8">
+
       {/* Header */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-600 via-indigo-600 to-violet-700 p-6 text-white shadow-xl shadow-indigo-100 sm:p-8">
-        <div className="absolute -right-16 -top-20 h-56 w-56 rounded-full bg-white/10" />
-        <div className="absolute -bottom-24 right-24 h-48 w-48 rounded-full bg-white/5" />
+      <div className="rounded-3xl border border-slate-200 bg-slate-900 p-6 text-white sm:p-8">
+        <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <div className="mb-3 flex items-center gap-2 text-sm font-medium text-blue-300">
+              <FileText size={17} />
+              Payroll Management
+            </div>
 
-        <div className="relative z-10">
-          <div className="mb-3 flex items-center gap-2 text-sm font-medium text-indigo-100">
-            <FileText size={17} />
-            Payroll Management
+            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
+              Payslips
+            </h1>
+
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300 sm:text-base">
+              View generated payslips, salary rule calculations, deductions,
+              net salary and payment status.
+            </p>
           </div>
-
-          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            Payslips
-          </h1>
-
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-indigo-100 sm:text-base">
-            View employee salary breakdowns, net salary, payment status and
-            generate payslip documents.
-          </p>
         </div>
       </div>
 
       {/* Statistics */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+
+        {/* Total */}
+        <div className="group rounded-2xl border border-slate-200 bg-white p-5 transition duration-200 hover:-translate-y-1 hover:border-blue-200">
           <div className="flex items-center justify-between">
-            <div className="rounded-xl bg-indigo-50 p-3 text-indigo-600">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
               <FileText size={21} />
             </div>
 
-            <span className="text-xs font-semibold text-slate-400">
-              Total
+            <span className="rounded-full bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-600">
+              All
             </span>
           </div>
 
-          <p className="mt-5 text-3xl font-bold text-slate-900">
-            {totalPayslips}
+          <p className="mt-5 text-sm font-medium text-slate-500">
+            Total Payslips
           </p>
 
-          <p className="mt-1 text-sm text-slate-500">
-            Payslips generated
+          <p className="mt-1 text-3xl font-bold text-slate-900">
+            {payslips.length}
+          </p>
+
+          <p className="mt-2 text-xs text-slate-400">
+            Generated from payruns
           </p>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+        {/* Paid */}
+        <div className="group rounded-2xl border border-slate-200 bg-white p-5 transition duration-200 hover:-translate-y-1 hover:border-blue-200">
           <div className="flex items-center justify-between">
-            <div className="rounded-xl bg-emerald-50 p-3 text-emerald-600">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
               <CheckCircle2 size={21} />
             </div>
 
-            <span className="text-xs font-semibold text-emerald-600">
-              Completed
+            <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700">
+              Paid
             </span>
           </div>
 
-          <p className="mt-5 text-3xl font-bold text-slate-900">
-            {paidPayslips}
+          <p className="mt-5 text-sm font-medium text-slate-500">
+            Paid Payslips
           </p>
 
-          <p className="mt-1 text-sm text-slate-500">
-            Paid payslips
+          <p className="mt-1 text-3xl font-bold text-slate-900">
+            {paidCount}
+          </p>
+
+          <p className="mt-2 text-xs text-slate-400">
+            Payment completed
           </p>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+        {/* Computed */}
+        <div className="group rounded-2xl border border-slate-200 bg-white p-5 transition duration-200 hover:-translate-y-1 hover:border-blue-200">
           <div className="flex items-center justify-between">
-            <div className="rounded-xl bg-amber-50 p-3 text-amber-600">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
               <Clock3 size={21} />
             </div>
 
-            <span className="text-xs font-semibold text-amber-600">
-              Processing
+            <span className="rounded-full bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-700">
+              Computed
             </span>
           </div>
 
-          <p className="mt-5 text-3xl font-bold text-slate-900">
-            {validatedPayslips}
+          <p className="mt-5 text-sm font-medium text-slate-500">
+            Computed Payslips
           </p>
 
-          <p className="mt-1 text-sm text-slate-500">
+          <p className="mt-1 text-3xl font-bold text-slate-900">
+            {computedCount}
+          </p>
+
+          <p className="mt-2 text-xs text-slate-400">
             Awaiting payment
           </p>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+        {/* Net Salary */}
+        <div className="group rounded-2xl border border-slate-200 bg-white p-5 transition duration-200 hover:-translate-y-1 hover:border-blue-200">
           <div className="flex items-center justify-between">
-            <div className="rounded-xl bg-violet-50 p-3 text-violet-600">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-100 text-slate-700">
               <IndianRupee size={21} />
             </div>
 
-            <span className="text-xs font-semibold text-violet-600">
-              Net Payroll
+            <span className="rounded-full bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-700">
+              Net
             </span>
           </div>
 
-          <p className="mt-5 text-3xl font-bold text-slate-900">
+          <p className="mt-5 text-sm font-medium text-slate-500">
+            Total Net Salary
+          </p>
+
+          <p className="mt-1 text-3xl font-bold text-slate-900">
             ₹{(totalNetSalary / 100000).toFixed(2)}L
           </p>
 
-          <p className="mt-1 text-sm text-slate-500">
+          <p className="mt-2 text-xs text-slate-400">
             Employee net salary
           </p>
         </div>
       </div>
 
       {/* Payslip Directory */}
-      <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+      <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white">
+
+        {/* Directory Header */}
         <div className="border-b border-slate-100 p-5 sm:p-6">
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+
             <div>
-              <h2 className="text-xl font-bold text-slate-900">
-                Payslip Directory
-              </h2>
+              <div className="flex items-center gap-2">
+                <h2 className="text-xl font-bold text-slate-900">
+                  Payslip Directory
+                </h2>
+
+                <span className="rounded-full bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-600">
+                  {filteredPayslips.length}
+                </span>
+              </div>
 
               <p className="mt-1 text-sm text-slate-500">
-                Salary breakdown for each employee
+                Payslips generated from salary structure and salary rules.
               </p>
             </div>
 
             <div className="flex flex-col gap-3 sm:flex-row">
+
               {/* Search */}
-              <div className="relative">
-                <Search
-                  size={18}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-                />
+              <div className="flex h-11 w-full items-center rounded-xl border border-slate-200 bg-slate-50 px-3 transition focus-within:border-blue-400 focus-within:bg-white focus-within:ring-4 focus-within:ring-blue-50 sm:w-72">
+                <Search size={18} className="shrink-0 text-slate-400" />
 
                 <input
                   type="text"
-                  placeholder="Search employee..."
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 pl-10 pr-4 text-sm outline-none transition focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-100 sm:w-64"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Search employee or payslip..."
+                  className="ml-2 w-full bg-transparent text-sm text-slate-700 outline-none placeholder:text-slate-400"
                 />
               </div>
 
               {/* Period */}
-              <select className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-medium text-slate-700 outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100">
-                <option>August 2026</option>
-                <option>July 2026</option>
-                <option>June 2026</option>
+              <select
+                value={periodFilter}
+                onChange={(e) => setPeriodFilter(e.target.value)}
+                className="h-11 rounded-xl border border-slate-200 bg-slate-50 px-4 text-sm font-medium text-slate-600 outline-none transition focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-50"
+              >
+                <option value="August 2026">August 2026</option>
+                <option value="July 2026">July 2026</option>
+                <option value="June 2026">June 2026</option>
+                <option value="All">All Periods</option>
+              </select>
+
+              {/* State */}
+              <select
+                value={stateFilter}
+                onChange={(e) => setStateFilter(e.target.value)}
+                className="h-11 rounded-xl border border-slate-200 bg-slate-50 px-4 text-sm font-medium text-slate-600 outline-none transition focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-50"
+              >
+                <option value="All">All States</option>
+                <option value="Draft">Draft</option>
+                <option value="Computed">Computed</option>
+                <option value="Paid">Paid</option>
+                <option value="Cancelled">Cancelled</option>
               </select>
             </div>
           </div>
@@ -224,30 +298,54 @@ export default function PayslipsPage() {
 
         {/* Desktop Table */}
         <div className="hidden overflow-x-auto lg:block">
-          <table className="w-full min-w-[1050px]">
-            <thead className="bg-slate-50">
-              <tr className="text-left text-xs font-bold uppercase tracking-wider text-slate-500">
-                <th className="px-6 py-4">Employee</th>
-                <th className="px-6 py-4">Period</th>
-                <th className="px-6 py-4">Basic</th>
-                <th className="px-6 py-4">Allowances</th>
-                <th className="px-6 py-4">Deductions</th>
-                <th className="px-6 py-4">Gross</th>
-                <th className="px-6 py-4">Net Salary</th>
-                <th className="px-6 py-4">Status</th>
-                <th className="px-6 py-4 text-right">Actions</th>
+          <table className="w-full min-w-[1200px]">
+
+            <thead>
+              <tr className="border-b border-slate-100 bg-slate-50/80">
+                <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-500">
+                  Employee
+                </th>
+
+                <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-500">
+                  Payslip
+                </th>
+
+                <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-500">
+                  Period
+                </th>
+
+                <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-500">
+                  Gross
+                </th>
+
+                <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-500">
+                  Deductions
+                </th>
+
+                <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-500">
+                  Net Salary
+                </th>
+
+                <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-500">
+                  State
+                </th>
+
+                <th className="px-6 py-4 text-right text-xs font-bold uppercase tracking-wider text-slate-500">
+                  Actions
+                </th>
               </tr>
             </thead>
 
             <tbody className="divide-y divide-slate-100">
-              {payslips.map((payslip) => (
+              {filteredPayslips.map((payslip) => (
                 <tr
                   key={payslip.id}
-                  className="transition hover:bg-slate-50/80"
+                  className="transition hover:bg-blue-50/30"
                 >
+                  {/* Employee */}
                   <td className="px-6 py-5">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-100 font-bold text-indigo-700">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 font-bold text-blue-700">
                         {payslip.employee.charAt(0)}
                       </div>
 
@@ -263,61 +361,84 @@ export default function PayslipsPage() {
                     </div>
                   </td>
 
+                  {/* Payslip */}
                   <td className="px-6 py-5">
-                    <div className="flex items-center gap-2 text-sm text-slate-600">
-                      <CalendarDays size={15} />
-                      {payslip.period}
+                    <div>
+                      <p className="font-semibold text-slate-800">
+                        {payslip.name}
+                      </p>
+
+                      <p className="mt-1 text-xs text-slate-400">
+                        {payslip.payrun}
+                      </p>
                     </div>
                   </td>
 
-                  <td className="px-6 py-5 text-sm font-medium text-slate-700">
-                    {payslip.basic}
+                  {/* Period */}
+                  <td className="px-6 py-5">
+                    <div className="flex items-center gap-2 text-sm text-slate-600">
+                      <CalendarDays
+                        size={15}
+                        className="text-blue-500"
+                      />
+
+                      <div>
+                        <p>{payslip.dateFrom}</p>
+                        <p className="text-xs text-slate-400">
+                          to {payslip.dateTo}
+                        </p>
+                      </div>
+                    </div>
                   </td>
 
-                  <td className="px-6 py-5 text-sm font-medium text-emerald-600">
-                    +{payslip.allowances}
+                  {/* Gross */}
+                  <td className="px-6 py-5">
+                    <span className="font-semibold text-slate-800">
+                      {payslip.grossSalary}
+                    </span>
                   </td>
 
-                  <td className="px-6 py-5 text-sm font-medium text-rose-600">
-                    -{payslip.deductions}
+                  {/* Deduction */}
+                  <td className="px-6 py-5">
+                    <span className="font-semibold text-rose-600">
+                      -{payslip.totalDeduction}
+                    </span>
                   </td>
 
-                  <td className="px-6 py-5 text-sm font-semibold text-slate-800">
-                    {payslip.gross}
-                  </td>
-
+                  {/* Net */}
                   <td className="px-6 py-5">
                     <span className="font-bold text-slate-900">
-                      {payslip.net}
+                      {payslip.netSalary}
                     </span>
                   </td>
 
+                  {/* State */}
                   <td className="px-6 py-5">
                     <span
-                      className={`inline-flex rounded-full px-3 py-1 text-xs font-bold ${
-                        payslip.status === "Paid"
-                          ? "bg-emerald-100 text-emerald-700"
-                          : "bg-amber-100 text-amber-700"
-                      }`}
+                      className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-bold ${getStateStyle(
+                        payslip.state
+                      )}`}
                     >
-                      {payslip.status}
+                      <span className="h-1.5 w-1.5 rounded-full bg-current" />
+                      {payslip.state}
                     </span>
                   </td>
 
+                  {/* Actions */}
                   <td className="px-6 py-5">
                     <div className="flex justify-end gap-2">
                       <button
                         type="button"
-                        className="rounded-lg border border-slate-200 p-2 text-slate-500 transition hover:border-indigo-200 hover:bg-indigo-50 hover:text-indigo-600"
                         title="Download PDF"
+                        className="rounded-lg border border-slate-200 p-2 text-slate-500 transition hover:border-blue-200 hover:bg-blue-50 hover:text-blue-600"
                       >
                         <Download size={17} />
                       </button>
 
                       <button
                         type="button"
-                        className="rounded-lg border border-slate-200 p-2 text-slate-500 transition hover:border-indigo-200 hover:bg-indigo-50 hover:text-indigo-600"
                         title="Send Payslip"
+                        className="rounded-lg border border-slate-200 p-2 text-slate-500 transition hover:border-blue-200 hover:bg-blue-50 hover:text-blue-600"
                       >
                         <Mail size={17} />
                       </button>
@@ -331,14 +452,15 @@ export default function PayslipsPage() {
 
         {/* Mobile Cards */}
         <div className="space-y-4 p-4 lg:hidden">
-          {payslips.map((payslip) => (
+          {filteredPayslips.map((payslip) => (
             <div
               key={payslip.id}
-              className="rounded-2xl border border-slate-200 p-4 transition hover:border-indigo-200 hover:shadow-md"
+              className="rounded-2xl border border-slate-200 p-4 transition hover:border-blue-200"
             >
               <div className="flex items-start justify-between gap-3">
+
                 <div className="flex items-center gap-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-100 font-bold text-indigo-700">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 font-bold text-blue-700">
                     {payslip.employee.charAt(0)}
                   </div>
 
@@ -348,48 +470,64 @@ export default function PayslipsPage() {
                     </p>
 
                     <p className="text-xs text-slate-500">
-                      {payslip.period}
+                      {payslip.name}
                     </p>
                   </div>
                 </div>
 
                 <span
-                  className={`rounded-full px-3 py-1 text-xs font-bold ${
-                    payslip.status === "Paid"
-                      ? "bg-emerald-100 text-emerald-700"
-                      : "bg-amber-100 text-amber-700"
-                  }`}
+                  className={`rounded-full px-3 py-1 text-xs font-bold ${getStateStyle(
+                    payslip.state
+                  )}`}
                 >
-                  {payslip.status}
+                  {payslip.state}
                 </span>
               </div>
 
+              <div className="mt-4 rounded-xl bg-slate-50 p-3">
+                <div className="flex items-center gap-2 text-sm text-slate-600">
+                  <CalendarDays size={15} className="text-blue-500" />
+                  {payslip.dateFrom} → {payslip.dateTo}
+                </div>
+
+                <p className="mt-2 text-xs text-slate-400">
+                  Payrun: {payslip.payrun}
+                </p>
+
+                <p className="mt-1 text-xs text-slate-400">
+                  Contract: {payslip.contract}
+                </p>
+              </div>
+
               <div className="mt-4 grid grid-cols-2 gap-3">
+
                 <div className="rounded-xl bg-slate-50 p-3">
-                  <p className="text-xs text-slate-400">Basic</p>
+                  <p className="text-xs text-slate-400">
+                    Gross Salary
+                  </p>
+
                   <p className="mt-1 font-semibold text-slate-800">
-                    {payslip.basic}
+                    {payslip.grossSalary}
                   </p>
                 </div>
 
                 <div className="rounded-xl bg-slate-50 p-3">
-                  <p className="text-xs text-slate-400">Allowances</p>
-                  <p className="mt-1 font-semibold text-emerald-600">
-                    +{payslip.allowances}
+                  <p className="text-xs text-slate-400">
+                    Deductions
                   </p>
-                </div>
 
-                <div className="rounded-xl bg-slate-50 p-3">
-                  <p className="text-xs text-slate-400">Deductions</p>
                   <p className="mt-1 font-semibold text-rose-600">
-                    -{payslip.deductions}
+                    -{payslip.totalDeduction}
                   </p>
                 </div>
 
-                <div className="rounded-xl bg-indigo-50 p-3">
-                  <p className="text-xs text-indigo-500">Net Salary</p>
-                  <p className="mt-1 font-bold text-indigo-700">
-                    {payslip.net}
+                <div className="col-span-2 rounded-xl bg-blue-50 p-3">
+                  <p className="text-xs text-blue-500">
+                    Net Salary
+                  </p>
+
+                  <p className="mt-1 text-xl font-bold text-blue-700">
+                    {payslip.netSalary}
                   </p>
                 </div>
               </div>
@@ -397,7 +535,7 @@ export default function PayslipsPage() {
               <div className="mt-4 flex gap-2">
                 <button
                   type="button"
-                  className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-slate-200 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-50"
+                  className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-slate-200 py-2.5 text-sm font-semibold text-slate-600 transition hover:border-blue-200 hover:bg-blue-50 hover:text-blue-600"
                 >
                   <Download size={16} />
                   PDF
@@ -405,7 +543,7 @@ export default function PayslipsPage() {
 
                 <button
                   type="button"
-                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-indigo-600 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-700"
+                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-blue-600 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700"
                 >
                   <Mail size={16} />
                   Send
@@ -415,18 +553,37 @@ export default function PayslipsPage() {
           ))}
         </div>
 
+        {/* Empty State */}
+        {filteredPayslips.length === 0 && (
+          <div className="px-6 py-14 text-center">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 text-slate-400">
+              <Search size={24} />
+            </div>
+
+            <h3 className="mt-4 text-base font-bold text-slate-900">
+              No payslips found
+            </h3>
+
+            <p className="mt-1 text-sm text-slate-500">
+              Try changing your search, period or state filter.
+            </p>
+          </div>
+        )}
+
         {/* Footer */}
-        <div className="flex flex-col gap-2 border-t border-slate-100 px-6 py-4 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-2 border-t border-slate-100 bg-slate-50/50 px-6 py-4 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2">
             <Users size={16} />
-            {payslips.length} payslips displayed
+            {filteredPayslips.length} payslips displayed
           </div>
 
           <p>
-            Payslips are generated from validated payroll calculations.
+            Payslips are calculated from the employee&apos;s contract,
+            salary structure and salary rules.
           </p>
         </div>
       </div>
     </div>
   );
 }
+

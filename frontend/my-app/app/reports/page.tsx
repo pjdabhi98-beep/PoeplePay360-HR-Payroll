@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -9,30 +10,35 @@ import {
   Download,
   FileText,
   ArrowUpRight,
+  Clock3,
+  CircleDollarSign,
 } from "lucide-react";
 
 const reportCards = [
   {
     title: "Employee Report",
-    description: "View employee count, departments and employment status.",
+    description:
+      "View employee details, departments, job positions and employment status.",
     value: "248",
     label: "Total Employees",
     icon: Users,
-    iconBg: "bg-indigo-50",
-    iconColor: "text-indigo-600",
+    iconBg: "bg-blue-50",
+    iconColor: "text-blue-600",
   },
   {
     title: "Attendance Report",
-    description: "Monitor attendance, absences, late arrivals and worked hours.",
+    description:
+      "Review check-in, check-out, worked hours and attendance exceptions.",
     value: "89.1%",
     label: "Attendance Rate",
     icon: CalendarCheck,
-    iconBg: "bg-emerald-50",
-    iconColor: "text-emerald-600",
+    iconBg: "bg-slate-100",
+    iconColor: "text-slate-700",
   },
   {
     title: "Time Off Report",
-    description: "Track leave requests, approvals and employee leave usage.",
+    description:
+      "Track leave types, requests, approval status and leave days.",
     value: "18",
     label: "Pending Requests",
     icon: CalendarDays,
@@ -41,33 +47,35 @@ const reportCards = [
   },
   {
     title: "Payroll Report",
-    description: "Review payroll totals, deductions and employee net salary.",
+    description:
+      "Review payruns, payslips, gross salary, deductions and net salary.",
     value: "₹42.8L",
-    label: "August Payroll",
+    label: "Payroll Overview",
     icon: WalletCards,
-    iconBg: "bg-violet-50",
-    iconColor: "text-violet-600",
+    iconBg: "bg-blue-50",
+    iconColor: "text-blue-600",
   },
 ];
 
 const monthlyPayroll = [
-  { month: "May", amount: "₹40.2L" },
-  { month: "Jun", amount: "₹41.1L" },
-  { month: "Jul", amount: "₹41.9L" },
-  { month: "Aug", amount: "₹42.8L" },
+  { month: "May", amount: "₹40.2L", width: "72%" },
+  { month: "Jun", amount: "₹41.1L", width: "78%" },
+  { month: "Jul", amount: "₹41.9L", width: "84%" },
+  { month: "Aug", amount: "₹42.8L", width: "90%" },
 ];
 
 export default function ReportsPage() {
   return (
     <div className="min-h-full space-y-6 pb-8">
+
       {/* Header */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-600 via-indigo-600 to-violet-700 p-6 text-white shadow-xl shadow-indigo-100 sm:p-8">
-        <div className="absolute -right-16 -top-20 h-56 w-56 rounded-full bg-white/10" />
-        <div className="absolute -bottom-24 right-24 h-48 w-48 rounded-full bg-white/5" />
+      <div className="relative overflow-hidden rounded-3xl bg-slate-900 p-6 text-white sm:p-8">
+        <div className="absolute -right-16 -top-20 h-56 w-56 rounded-full bg-blue-600/20" />
+        <div className="absolute -bottom-24 right-24 h-48 w-48 rounded-full bg-blue-500/10" />
 
         <div className="relative z-10 flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <div className="mb-3 flex items-center gap-2 text-sm font-medium text-indigo-100">
+            <div className="mb-3 flex items-center gap-2 text-sm font-medium text-blue-300">
               <FileText size={17} />
               Analytics & Reports
             </div>
@@ -76,15 +84,15 @@ export default function ReportsPage() {
               Reports
             </h1>
 
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-indigo-100 sm:text-base">
-              Get a quick overview of HR, attendance, time off and payroll
-              information.
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300 sm:text-base">
+              Get an overview of employees, attendance, time off and payroll
+              information from your PeoplePay360 system.
             </p>
           </div>
 
           <button
             type="button"
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-bold text-indigo-700 shadow-lg transition hover:-translate-y-0.5 hover:bg-indigo-50"
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:bg-blue-700"
           >
             <Download size={18} />
             Export Report
@@ -100,7 +108,7 @@ export default function ReportsPage() {
           return (
             <div
               key={report.title}
-              className="group rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-xl"
+              className="group rounded-3xl border border-slate-200 bg-white p-6 transition duration-200 hover:-translate-y-1 hover:border-blue-200"
             >
               <div className="flex items-start justify-between">
                 <div
@@ -111,7 +119,7 @@ export default function ReportsPage() {
 
                 <ArrowUpRight
                   size={20}
-                  className="text-slate-300 transition group-hover:text-indigo-500"
+                  className="text-slate-300 transition group-hover:text-blue-600"
                 />
               </div>
 
@@ -138,7 +146,7 @@ export default function ReportsPage() {
 
                 <button
                   type="button"
-                  className="rounded-xl bg-slate-50 px-4 py-2 text-sm font-semibold text-indigo-600 transition hover:bg-indigo-50"
+                  className="rounded-xl bg-slate-50 px-4 py-2 text-sm font-semibold text-blue-600 transition hover:bg-blue-50"
                 >
                   View Report
                 </button>
@@ -150,7 +158,9 @@ export default function ReportsPage() {
 
       {/* Payroll Overview */}
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
-        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm xl:col-span-2">
+
+        {/* Payroll Trend */}
+        <div className="rounded-3xl border border-slate-200 bg-white p-6 xl:col-span-2">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h2 className="text-xl font-bold text-slate-900">
@@ -158,18 +168,18 @@ export default function ReportsPage() {
               </h2>
 
               <p className="mt-1 text-sm text-slate-500">
-                Monthly payroll overview
+                Monthly payroll overview based on payslip data.
               </p>
             </div>
 
-            <div className="flex items-center gap-2 rounded-xl bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-600">
+            <div className="flex w-fit items-center gap-2 rounded-xl bg-blue-50 px-3 py-2 text-sm font-semibold text-blue-600">
               <TrendingUp size={17} />
-              +6.4%
+              Payroll Overview
             </div>
           </div>
 
           <div className="mt-8 space-y-5">
-            {monthlyPayroll.map((item, index) => (
+            {monthlyPayroll.map((item) => (
               <div key={item.month}>
                 <div className="mb-2 flex items-center justify-between text-sm">
                   <span className="font-semibold text-slate-600">
@@ -183,9 +193,9 @@ export default function ReportsPage() {
 
                 <div className="h-3 overflow-hidden rounded-full bg-slate-100">
                   <div
-                    className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-violet-600"
+                    className="h-full rounded-full bg-blue-600 transition-all duration-500"
                     style={{
-                      width: `${70 + index * 8}%`,
+                      width: item.width,
                     }}
                   />
                 </div>
@@ -195,52 +205,81 @@ export default function ReportsPage() {
         </div>
 
         {/* Quick Summary */}
-        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="rounded-3xl border border-slate-200 bg-white p-6">
           <h2 className="text-xl font-bold text-slate-900">
             Quick Summary
           </h2>
 
           <p className="mt-1 text-sm text-slate-500">
-            Current HR statistics
+            Current HR and payroll statistics.
           </p>
 
           <div className="mt-6 space-y-4">
+
+            {/* Employees */}
             <div className="flex items-center justify-between rounded-2xl bg-slate-50 p-4">
-              <span className="text-sm text-slate-500">
-                Active Employees
-              </span>
+              <div className="flex items-center gap-3">
+                <div className="rounded-xl bg-blue-50 p-2 text-blue-600">
+                  <Users size={18} />
+                </div>
+
+                <span className="text-sm text-slate-500">
+                  Active Employees
+                </span>
+              </div>
 
               <span className="font-bold text-slate-900">
                 231
               </span>
             </div>
 
+            {/* Attendance */}
             <div className="flex items-center justify-between rounded-2xl bg-slate-50 p-4">
-              <span className="text-sm text-slate-500">
-                Present Today
-              </span>
+              <div className="flex items-center gap-3">
+                <div className="rounded-xl bg-slate-100 p-2 text-slate-700">
+                  <Clock3 size={18} />
+                </div>
 
-              <span className="font-bold text-emerald-600">
-                221
+                <span className="text-sm text-slate-500">
+                  Attendance Rate
+                </span>
+              </div>
+
+              <span className="font-bold text-slate-900">
+                89.1%
               </span>
             </div>
 
+            {/* Time Off */}
             <div className="flex items-center justify-between rounded-2xl bg-slate-50 p-4">
-              <span className="text-sm text-slate-500">
-                Pending Leaves
-              </span>
+              <div className="flex items-center gap-3">
+                <div className="rounded-xl bg-amber-50 p-2 text-amber-600">
+                  <CalendarDays size={18} />
+                </div>
+
+                <span className="text-sm text-slate-500">
+                  Pending Leaves
+                </span>
+              </div>
 
               <span className="font-bold text-amber-600">
                 18
               </span>
             </div>
 
+            {/* Payroll */}
             <div className="flex items-center justify-between rounded-2xl bg-slate-50 p-4">
-              <span className="text-sm text-slate-500">
-                Monthly Payroll
-              </span>
+              <div className="flex items-center gap-3">
+                <div className="rounded-xl bg-blue-50 p-2 text-blue-600">
+                  <CircleDollarSign size={18} />
+                </div>
 
-              <span className="font-bold text-indigo-600">
+                <span className="text-sm text-slate-500">
+                  Monthly Payroll
+                </span>
+              </div>
+
+              <span className="font-bold text-blue-600">
                 ₹42.8L
               </span>
             </div>
@@ -248,13 +287,18 @@ export default function ReportsPage() {
         </div>
       </div>
 
-      {/* Footer */}
-      <div className="rounded-2xl border border-indigo-100 bg-indigo-50 p-4 text-sm text-indigo-700">
-        <div className="flex items-center gap-2 font-semibold">
-          <FileText size={17} />
-          Reports are designed to use live HR and payroll data from Odoo.
+      {/* Report Information */}
+      <div className="rounded-2xl border border-blue-100 bg-blue-50 p-4 text-sm text-blue-700">
+        <div className="flex items-start gap-2 font-semibold">
+          <FileText size={17} className="mt-0.5 shrink-0" />
+
+          <span>
+            Reports can be connected to live Odoo data to generate employee,
+            attendance, time off, payroll and payslip reports.
+          </span>
         </div>
       </div>
     </div>
   );
 }
+
