@@ -1,0 +1,13 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_peoplepay_employee,peoplepay.employee,model_peoplepay_employee,base.group_user,1,1,1,1
+access_peoplepay_contract,peoplepay.contract,model_peoplepay_contract,base.group_user,1,1,1,1
+access_peoplepay_working_schedule,peoplepay.working.schedule,model_peoplepay_working_schedule,base.group_user,1,1,1,1
+access_peoplepay_attendance,peoplepay.attendance,model_peoplepay_attendance,base.group_user,1,1,1,1
+access_peoplepay_time_off_type,peoplepay.time.off.type,model_peoplepay_time_off_type,base.group_user,1,1,1,1
+access_peoplepay_time_off_allocation,peoplepay.time.off.allocation,model_peoplepay_time_off_allocation,base.group_user,1,1,1,1
+access_peoplepay_time_off_request,peoplepay.time.off.request,model_peoplepay_time_off_request,base.group_user,1,1,1,1
+access_peoplepay_salary_structure,peoplepay.salary.structure,model_peoplepay_salary_structure,base.group_user,1,1,1,1
+access_peoplepay_salary_rule,peoplepay.salary.rule,model_peoplepay_salary_rule,base.group_user,1,1,1,1
+access_peoplepay_payrun,peoplepay.payrun,model_peoplepay_payrun,base.group_user,1,1,1,1
+access_peoplepay_payslip,peoplepay.payslip,model_peoplepay_payslip,base.group_user,1,1,1,1
+access_peoplepay_payslip_line,peoplepay.payslip.line,model_peoplepay_payslip_line,base.group_user,1,1,1,1

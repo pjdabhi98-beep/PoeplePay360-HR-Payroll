@@ -1,0 +1,1026 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <!-- ========================================================= -->
+    <!-- ACTIONS -->
+    <!-- ========================================================= -->
+
+    <record id="action_peoplepay_home" model="ir.actions.act_window">
+        <field name="name">PeoplePay360</field>
+        <field name="res_model">peoplepay.employee</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_peoplepay_employee" model="ir.actions.act_window">
+        <field name="name">Employees</field>
+        <field name="res_model">peoplepay.employee</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_peoplepay_contract" model="ir.actions.act_window">
+        <field name="name">Contracts</field>
+        <field name="res_model">peoplepay.contract</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_peoplepay_working_schedule" model="ir.actions.act_window">
+        <field name="name">Working Schedules</field>
+        <field name="res_model">peoplepay.working.schedule</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_peoplepay_attendance" model="ir.actions.act_window">
+        <field name="name">Attendance</field>
+        <field name="res_model">peoplepay.attendance</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_peoplepay_time_off_type" model="ir.actions.act_window">
+        <field name="name">Time Off Types</field>
+        <field name="res_model">peoplepay.time.off.type</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_peoplepay_time_off_allocation" model="ir.actions.act_window">
+        <field name="name">Time Off Allocations</field>
+        <field name="res_model">peoplepay.time.off.allocation</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_peoplepay_time_off_request" model="ir.actions.act_window">
+        <field name="name">Time Off Requests</field>
+        <field name="res_model">peoplepay.time.off.request</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_peoplepay_salary_structure" model="ir.actions.act_window">
+        <field name="name">Salary Structures</field>
+        <field name="res_model">peoplepay.salary.structure</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_peoplepay_salary_rule" model="ir.actions.act_window">
+        <field name="name">Salary Rules</field>
+        <field name="res_model">peoplepay.salary.rule</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_peoplepay_payrun" model="ir.actions.act_window">
+        <field name="name">Payruns</field>
+        <field name="res_model">peoplepay.payrun</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_peoplepay_payslip" model="ir.actions.act_window">
+        <field name="name">Payslips</field>
+        <field name="res_model">peoplepay.payslip</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+
+    <!-- ========================================================= -->
+    <!-- EMPLOYEE -->
+    <!-- ========================================================= -->
+
+    <record id="view_peoplepay_employee_list" model="ir.ui.view">
+        <field name="name">peoplepay.employee.list</field>
+        <field name="model">peoplepay.employee</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="employee_code"/>
+                <field name="department"/>
+                <field name="job_position"/>
+                <field name="schedule_id"/>
+                <field name="status"/>
+                <field name="contract_count"/>
+                <field name="payslip_count"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_peoplepay_employee_form" model="ir.ui.view">
+        <field name="name">peoplepay.employee.form</field>
+        <field name="model">peoplepay.employee</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="employee_code"/>
+                            <field name="department"/>
+                            <field name="job_position"/>
+                        </group>
+
+                        <group>
+                            <field name="manager_id"/>
+                            <field name="schedule_id"/>
+                            <field name="status"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+
+                        <page string="Contracts">
+                            <field name="contract_ids">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="start_date"/>
+                                    <field name="end_date"/>
+                                    <field name="wage"/>
+                                    <field name="state"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <page string="Attendance">
+                            <field name="attendance_ids">
+                                <list>
+                                    <field name="check_in"/>
+                                    <field name="check_out"/>
+                                    <field name="worked_hours"/>
+                                    <field name="state"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <page string="Time Off">
+                            <field name="time_off_request_ids">
+                                <list>
+                                    <field name="time_off_type_id"/>
+                                    <field name="start_date"/>
+                                    <field name="end_date"/>
+                                    <field name="days"/>
+                                    <field name="state"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <page string="Payslips">
+                            <field name="payslip_ids">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="payrun_id"/>
+                                    <field name="date_from"/>
+                                    <field name="date_to"/>
+                                    <field name="gross_salary"/>
+                                    <field name="total_deduction"/>
+                                    <field name="net_salary"/>
+                                    <field name="state"/>
+                                </list>
+                            </field>
+                        </page>
+
+                    </notebook>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <!-- ========================================================= -->
+    <!-- CONTRACT -->
+    <!-- ========================================================= -->
+
+    <record id="view_peoplepay_contract_list" model="ir.ui.view">
+        <field name="name">peoplepay.contract.list</field>
+        <field name="model">peoplepay.contract</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="employee_id"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="wage"/>
+                <field name="salary_structure_id"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_peoplepay_contract_form" model="ir.ui.view">
+        <field name="name">peoplepay.contract.form</field>
+        <field name="model">peoplepay.contract</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="employee_id"/>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                        </group>
+
+                        <group>
+                            <field name="wage"/>
+                            <field name="salary_structure_id"/>
+                            <field name="state"/>
+                        </group>
+                    </group>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <!-- ========================================================= -->
+    <!-- WORKING SCHEDULE -->
+    <!-- ========================================================= -->
+
+    <record id="view_peoplepay_working_schedule_list" model="ir.ui.view">
+        <field name="name">peoplepay.working.schedule.list</field>
+        <field name="model">peoplepay.working.schedule</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="type"/>
+                <field name="day"/>
+                <field name="start_time"/>
+                <field name="end_time"/>
+                <field name="break_hours"/>
+                <field name="total_hours"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_peoplepay_working_schedule_form" model="ir.ui.view">
+        <field name="name">peoplepay.working.schedule.form</field>
+        <field name="model">peoplepay.working.schedule</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="type"/>
+                            <field name="day"/>
+                            <field name="start_time"/>
+                        </group>
+
+                        <group>
+                            <field name="end_time"/>
+                            <field name="break_hours"/>
+                            <field name="total_hours" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Employees">
+                            <field name="employee_ids">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="employee_code"/>
+                                    <field name="department"/>
+                                    <field name="status"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <!-- ========================================================= -->
+    <!-- ATTENDANCE -->
+    <!-- ========================================================= -->
+
+    <record id="view_peoplepay_attendance_list" model="ir.ui.view">
+        <field name="name">peoplepay.attendance.list</field>
+        <field name="model">peoplepay.attendance</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="employee_id"/>
+                <field name="check_in"/>
+                <field name="check_out"/>
+                <field name="worked_hours"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_peoplepay_attendance_form" model="ir.ui.view">
+        <field name="name">peoplepay.attendance.form</field>
+        <field name="model">peoplepay.attendance</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="employee_id"/>
+                            <field name="check_in"/>
+                        </group>
+
+                        <group>
+                            <field name="check_out"/>
+                            <field name="worked_hours" readonly="1"/>
+                            <field name="state" readonly="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <!-- ========================================================= -->
+    <!-- TIME OFF TYPE -->
+    <!-- ========================================================= -->
+
+    <record id="view_peoplepay_time_off_type_list" model="ir.ui.view">
+        <field name="name">peoplepay.time.off.type.list</field>
+        <field name="model">peoplepay.time.off.type</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="is_paid"/>
+                <field name="requires_allocation"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_peoplepay_time_off_type_form" model="ir.ui.view">
+        <field name="name">peoplepay.time.off.type.form</field>
+        <field name="model">peoplepay.time.off.type</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="is_paid"/>
+                        </group>
+
+                        <group>
+                            <field name="requires_allocation"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <!-- ========================================================= -->
+    <!-- TIME OFF ALLOCATION -->
+    <!-- ========================================================= -->
+
+    <record id="view_peoplepay_time_off_allocation_list" model="ir.ui.view">
+        <field name="name">peoplepay.time.off.allocation.list</field>
+        <field name="model">peoplepay.time.off.allocation</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="employee_id"/>
+                <field name="time_off_type_id"/>
+                <field name="allocated_days"/>
+                <field name="taken_days"/>
+                <field name="remaining_days"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_peoplepay_time_off_allocation_form" model="ir.ui.view">
+        <field name="name">peoplepay.time.off.allocation.form</field>
+        <field name="model">peoplepay.time.off.allocation</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+
+                    <group>
+                        <group>
+                            <field name="employee_id"/>
+                            <field name="time_off_type_id"/>
+                            <field name="allocated_days"/>
+                        </group>
+
+                        <group>
+                            <field name="taken_days" readonly="1"/>
+                            <field name="remaining_days" readonly="1"/>
+                            <field name="state"/>
+                        </group>
+                    </group>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <!-- ========================================================= -->
+    <!-- TIME OFF REQUEST -->
+    <!-- ========================================================= -->
+
+    <record id="view_peoplepay_time_off_request_list" model="ir.ui.view">
+        <field name="name">peoplepay.time.off.request.list</field>
+        <field name="model">peoplepay.time.off.request</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="employee_id"/>
+                <field name="time_off_type_id"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="days"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_peoplepay_time_off_request_form" model="ir.ui.view">
+        <field name="name">peoplepay.time.off.request.form</field>
+        <field name="model">peoplepay.time.off.request</field>
+        <field name="arch" type="xml">
+
+            <form>
+
+                <header>
+
+                    <button
+                        name="action_submit"
+                        type="object"
+                        string="Submit"
+                        class="btn-primary"
+                        invisible="state != 'draft'"
+                    />
+
+                    <button
+                        name="action_approve"
+                        type="object"
+                        string="Approve"
+                        class="btn-primary"
+                        invisible="state != 'submitted'"
+                    />
+
+                    <button
+                        name="action_reject"
+                        type="object"
+                        string="Reject"
+                        class="btn-secondary"
+                        invisible="state not in ('submitted', 'approved')"
+                    />
+
+                    <field
+                        name="state"
+                        widget="statusbar"
+                        statusbar_visible="draft,submitted,approved,rejected"
+                    />
+
+                </header>
+
+                <sheet>
+
+                    <group>
+                        <group>
+                            <field name="employee_id"/>
+                            <field name="time_off_type_id"/>
+                            <field name="start_date"/>
+                        </group>
+
+                        <group>
+                            <field name="end_date"/>
+                            <field name="days" readonly="1"/>
+                            <field name="reason"/>
+                        </group>
+                    </group>
+
+                </sheet>
+
+            </form>
+
+        </field>
+    </record>
+
+
+    <!-- ========================================================= -->
+    <!-- SALARY STRUCTURE -->
+    <!-- ========================================================= -->
+
+    <record id="view_peoplepay_salary_structure_list" model="ir.ui.view">
+        <field name="name">peoplepay.salary.structure.list</field>
+        <field name="model">peoplepay.salary.structure</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_peoplepay_salary_structure_form" model="ir.ui.view">
+        <field name="name">peoplepay.salary.structure.form</field>
+        <field name="model">peoplepay.salary.structure</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <field name="code"/>
+                        <field name="active"/>
+                    </group>
+
+                    <notebook>
+
+                        <page string="Salary Rules">
+
+                            <field name="rule_ids">
+
+                                <list editable="bottom">
+                                    <field name="sequence"/>
+                                    <field name="name"/>
+                                    <field name="code"/>
+                                    <field name="rule_type"/>
+                                    <field name="amount_type"/>
+                                    <field name="amount"/>
+                                    <field name="active"/>
+                                </list>
+
+                            </field>
+
+                        </page>
+
+                    </notebook>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <!-- ========================================================= -->
+    <!-- SALARY RULE -->
+    <!-- ========================================================= -->
+
+    <record id="view_peoplepay_salary_rule_list" model="ir.ui.view">
+        <field name="name">peoplepay.salary.rule.list</field>
+        <field name="model">peoplepay.salary.rule</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="rule_type"/>
+                <field name="amount_type"/>
+                <field name="amount"/>
+                <field name="structure_id"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_peoplepay_salary_rule_form" model="ir.ui.view">
+        <field name="name">peoplepay.salary.rule.form</field>
+        <field name="model">peoplepay.salary.rule</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+
+                    <group>
+
+                        <group>
+                            <field name="code"/>
+                            <field name="sequence"/>
+                            <field name="structure_id"/>
+                        </group>
+
+                        <group>
+                            <field name="rule_type"/>
+                            <field name="amount_type"/>
+                            <field name="amount"/>
+                            <field name="active"/>
+                        </group>
+
+                    </group>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <!-- ========================================================= -->
+    <!-- PAYRUN -->
+    <!-- ========================================================= -->
+
+    <record id="view_peoplepay_payrun_list" model="ir.ui.view">
+        <field name="name">peoplepay.payrun.list</field>
+        <field name="model">peoplepay.payrun</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="payslip_count"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_peoplepay_payrun_form" model="ir.ui.view">
+        <field name="name">peoplepay.payrun.form</field>
+        <field name="model">peoplepay.payrun</field>
+        <field name="arch" type="xml">
+
+            <form>
+
+                <header>
+
+                    <button
+                        name="action_process"
+                        type="object"
+                        string="Process"
+                        class="btn-primary"
+                        invisible="state != 'draft'"
+                    />
+
+                    <button
+                        name="action_done"
+                        type="object"
+                        string="Mark Done"
+                        class="btn-primary"
+                        invisible="state != 'processing'"
+                    />
+
+                    <button
+                        name="action_cancel"
+                        type="object"
+                        string="Cancel"
+                        class="btn-secondary"
+                        invisible="state in ('done', 'cancelled')"
+                    />
+
+                    <field
+                        name="state"
+                        widget="statusbar"
+                        statusbar_visible="draft,processing,done,cancelled"
+                    />
+
+                </header>
+
+                <sheet>
+
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+
+                    <group>
+
+                        <group>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                        </group>
+
+                        <group>
+                            <field name="payslip_count" readonly="1"/>
+                        </group>
+
+                    </group>
+
+                    <notebook>
+
+                        <page string="Payslips">
+
+                            <field name="payslip_ids">
+
+                                <list>
+                                    <field name="name"/>
+                                    <field name="employee_id"/>
+                                    <field name="date_from"/>
+                                    <field name="date_to"/>
+                                    <field name="gross_salary"/>
+                                    <field name="total_deduction"/>
+                                    <field name="net_salary"/>
+                                    <field name="state"/>
+                                </list>
+
+                            </field>
+
+                        </page>
+
+                    </notebook>
+
+                </sheet>
+
+            </form>
+
+        </field>
+    </record>
+
+
+    <!-- ========================================================= -->
+    <!-- PAYSLIP -->
+    <!-- ========================================================= -->
+
+    <record id="view_peoplepay_payslip_list" model="ir.ui.view">
+        <field name="name">peoplepay.payslip.list</field>
+        <field name="model">peoplepay.payslip</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="employee_id"/>
+                <field name="contract_id"/>
+                <field name="payrun_id"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="gross_salary"/>
+                <field name="total_deduction"/>
+                <field name="net_salary"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_peoplepay_payslip_form" model="ir.ui.view">
+        <field name="name">peoplepay.payslip.form</field>
+        <field name="model">peoplepay.payslip</field>
+        <field name="arch" type="xml">
+
+            <form>
+
+                <header>
+
+                    <button
+                        name="action_compute"
+                        type="object"
+                        string="Compute"
+                        class="btn-primary"
+                        invisible="state != 'draft'"
+                    />
+
+                    <button
+                        name="action_paid"
+                        type="object"
+                        string="Mark Paid"
+                        class="btn-primary"
+                        invisible="state != 'computed'"
+                    />
+
+                    <button
+                        name="action_cancel"
+                        type="object"
+                        string="Cancel"
+                        class="btn-secondary"
+                        invisible="state in ('paid', 'cancelled')"
+                    />
+
+                    <field
+                        name="state"
+                        widget="statusbar"
+                        statusbar_visible="draft,computed,paid,cancelled"
+                    />
+
+                </header>
+
+                <sheet>
+
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+
+                    <group>
+
+                        <group>
+                            <field name="employee_id"/>
+                            <field name="contract_id"/>
+                            <field name="payrun_id"/>
+                        </group>
+
+                        <group>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                        </group>
+
+                    </group>
+
+                    <group string="Salary Summary">
+
+                        <group>
+                            <field name="gross_salary" readonly="1"/>
+                            <field name="total_deduction" readonly="1"/>
+                        </group>
+
+                        <group>
+                            <field name="net_salary" readonly="1"/>
+                        </group>
+
+                    </group>
+
+                    <notebook>
+
+                        <page string="Salary Lines">
+
+                            <field name="line_ids">
+
+                                <list editable="bottom">
+                                    <field name="sequence"/>
+                                    <field name="name"/>
+                                    <field name="code"/>
+                                    <field name="rule_id"/>
+                                    <field name="rule_type"/>
+                                    <field name="amount"/>
+                                </list>
+
+                            </field>
+
+                        </page>
+
+                    </notebook>
+
+                </sheet>
+
+            </form>
+
+        </field>
+    </record>
+
+
+    <!-- ========================================================= -->
+    <!-- PEOPLEPAY360 ROOT APP -->
+    <!-- ========================================================= -->
+
+    <menuitem
+        id="menu_peoplepay_root"
+        name="PeoplePay360"
+        action="action_peoplepay_home"
+        sequence="10"
+        groups="base.group_user"
+    />
+
+
+    <!-- ========================================================= -->
+    <!-- HR -->
+    <!-- ========================================================= -->
+
+    <menuitem
+        id="menu_peoplepay_hr"
+        name="HR"
+        parent="menu_peoplepay_root"
+        sequence="10"
+        groups="base.group_user"
+    />
+
+    <menuitem
+        id="menu_peoplepay_employee"
+        name="Employees"
+        parent="menu_peoplepay_hr"
+        action="action_peoplepay_employee"
+        sequence="10"
+        groups="base.group_user"
+    />
+
+    <menuitem
+        id="menu_peoplepay_contract"
+        name="Contracts"
+        parent="menu_peoplepay_hr"
+        action="action_peoplepay_contract"
+        sequence="20"
+        groups="base.group_user"
+    />
+
+    <menuitem
+        id="menu_peoplepay_schedule"
+        name="Working Schedules"
+        parent="menu_peoplepay_hr"
+        action="action_peoplepay_working_schedule"
+        sequence="30"
+        groups="base.group_user"
+    />
+
+    <menuitem
+        id="menu_peoplepay_attendance"
+        name="Attendance"
+        parent="menu_peoplepay_hr"
+        action="action_peoplepay_attendance"
+        sequence="40"
+        groups="base.group_user"
+    />
+
+    <menuitem
+        id="menu_peoplepay_time_off_type"
+        name="Time Off Types"
+        parent="menu_peoplepay_hr"
+        action="action_peoplepay_time_off_type"
+        sequence="50"
+        groups="base.group_user"
+    />
+
+    <menuitem
+        id="menu_peoplepay_time_off_allocation"
+        name="Time Off Allocations"
+        parent="menu_peoplepay_hr"
+        action="action_peoplepay_time_off_allocation"
+        sequence="60"
+        groups="base.group_user"
+    />
+
+    <menuitem
+        id="menu_peoplepay_time_off_request"
+        name="Time Off Requests"
+        parent="menu_peoplepay_hr"
+        action="action_peoplepay_time_off_request"
+        sequence="70"
+        groups="base.group_user"
+    />
+
+
+    <!-- ========================================================= -->
+    <!-- PAYROLL -->
+    <!-- ========================================================= -->
+
+    <menuitem
+        id="menu_peoplepay_payroll"
+        name="Payroll"
+        parent="menu_peoplepay_root"
+        sequence="20"
+        groups="base.group_user"
+    />
+
+    <menuitem
+        id="menu_peoplepay_salary_structure"
+        name="Salary Structures"
+        parent="menu_peoplepay_payroll"
+        action="action_peoplepay_salary_structure"
+        sequence="10"
+        groups="base.group_user"
+    />
+
+    <menuitem
+        id="menu_peoplepay_salary_rule"
+        name="Salary Rules"
+        parent="menu_peoplepay_payroll"
+        action="action_peoplepay_salary_rule"
+        sequence="20"
+        groups="base.group_user"
+    />
+
+    <menuitem
+        id="menu_peoplepay_payrun"
+        name="Payruns"
+        parent="menu_peoplepay_payroll"
+        action="action_peoplepay_payrun"
+        sequence="30"
+        groups="base.group_user"
+    />
+
+    <menuitem
+        id="menu_peoplepay_payslip"
+        name="Payslips"
+        parent="menu_peoplepay_payroll"
+        action="action_peoplepay_payslip"
+        sequence="40"
+        groups="base.group_user"
+    />
+
+</odoo>
