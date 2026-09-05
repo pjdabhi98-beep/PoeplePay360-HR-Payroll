@@ -1,108 +1,87 @@
-import { useState } from "react";
 "use client";
 
 import {
   Search,
-  Clock3,
-  Users,
-  CheckCircle2,
-  AlertCircle,
   CalendarDays,
-  Timer,
-  UserCheck,
+  Clock3,
+  CheckCircle2,
+  XCircle,
+  Users,
+  Plane,
 } from "lucide-react";
-
-const attendanceRecords = [
+import Link from "next/link";
+const leaveRecords = [
   {
     id: 1,
-    employee: "Aarav Patel",
-    department: "Engineering",
-    date: "05 Sep 2026",
-    checkIn: "09:02 AM",
-    checkOut: "06:04 PM",
-    workedHours: "8h 02m",
-    status: "Present",
+    employee: "Neha Desai",
+    department: "Marketing",
+    leaveType: "Paid Time Off",
+    startDate: "08 Sep 2026",
+    endDate: "10 Sep 2026",
+    days: 3,
+    status: "Approved",
   },
   {
     id: 2,
-    employee: "Priya Shah",
-    department: "Human Resources",
-    date: "05 Sep 2026",
-    checkIn: "08:55 AM",
-    checkOut: "05:58 PM",
-    workedHours: "8h 03m",
-    status: "Present",
+    employee: "Rahul Mehta",
+    department: "Finance",
+    leaveType: "Sick Leave",
+    startDate: "07 Sep 2026",
+    endDate: "07 Sep 2026",
+    days: 1,
+    status: "Pending",
   },
   {
     id: 3,
-    employee: "Rahul Mehta",
-    department: "Finance",
-    date: "05 Sep 2026",
-    checkIn: "09:18 AM",
-    checkOut: "06:10 PM",
-    workedHours: "7h 52m",
-    status: "Late",
+    employee: "Aarav Patel",
+    department: "Engineering",
+    leaveType: "Casual Leave",
+    startDate: "15 Sep 2026",
+    endDate: "16 Sep 2026",
+    days: 2,
+    status: "Approved",
   },
   {
     id: 4,
-    employee: "Neha Desai",
-    department: "Marketing",
-    date: "05 Sep 2026",
-    checkIn: "—",
-    checkOut: "—",
-    workedHours: "—",
-    status: "Absent",
+    employee: "Priya Shah",
+    department: "Human Resources",
+    leaveType: "Paid Time Off",
+    startDate: "20 Sep 2026",
+    endDate: "22 Sep 2026",
+    days: 3,
+    status: "Pending",
   },
   {
     id: 5,
     employee: "Riya Mehta",
     department: "Sales",
-    date: "05 Sep 2026",
-    checkIn: "09:00 AM",
-    checkOut: "06:00 PM",
-    workedHours: "8h 00m",
-    status: "Present",
+    leaveType: "Casual Leave",
+    startDate: "03 Sep 2026",
+    endDate: "04 Sep 2026",
+    days: 2,
+    status: "Refused",
   },
 ];
 
-export default function AttendancePage() {
-  const [search, setSearch] = useState("");
-const [statusFilter, setStatusFilter] = useState("All Status");
-const [dateFilter, setDateFilter] = useState("");
-const filteredRecords = attendanceRecords.filter((record) => {
-  const matchesSearch =
-    record.employee.toLowerCase().includes(search.toLowerCase());
-
-  const matchesStatus =
-    statusFilter === "All Status" ||
-    record.status === statusFilter;
-
-  const matchesDate =
-    !dateFilter ||
-    record.date ===
-      new Date(dateFilter).toLocaleDateString("en-GB", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-      });
-
-  return matchesSearch && matchesStatus && matchesDate;
-});
-  const presentCount = filteredRecords.filter(
-    (record) => record.status === "Present"
+export default function TimeOffPage() {
+  const approvedCount = leaveRecords.filter(
+    (leave) => leave.status === "Approved"
   ).length;
 
-  const lateCount = filteredRecords.filter(
-    (record) => record.status === "Late"
+  const pendingCount = leaveRecords.filter(
+    (leave) => leave.status === "Pending"
   ).length;
 
-  const absentCount = filteredRecords.filter(
-    (record) => record.status === "Absent"
+  const refusedCount = leaveRecords.filter(
+    (leave) => leave.status === "Refused"
   ).length;
+
+  const totalDays = leaveRecords
+    .filter((leave) => leave.status === "Approved")
+    .reduce((total, leave) => total + leave.days, 0);
 
   return (
     <div className="min-h-full space-y-6 pb-8">
-
       {/* Header */}
       <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-600 via-indigo-600 to-violet-700 p-6 text-white shadow-xl shadow-indigo-100 sm:p-8">
         <div className="absolute -right-16 -top-20 h-56 w-56 rounded-full bg-white/10" />
@@ -110,181 +89,175 @@ const filteredRecords = attendanceRecords.filter((record) => {
 
         <div className="relative z-10">
           <div className="mb-3 flex items-center gap-2 text-sm font-medium text-indigo-100">
-            <Clock3 size={17} />
-            Daily Workforce Tracking
+            <Plane size={17} />
+            Employee Leave Management
           </div>
 
           <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            Attendance
+            Time Off
           </h1>
 
           <p className="mt-2 max-w-2xl text-sm leading-6 text-indigo-100 sm:text-base">
-            Monitor employee check-ins, check-outs, worked hours and daily
-            attendance status.
+            Manage employee leave requests, approvals, leave types and time
+            off balances.
           </p>
         </div>
+        <Link
+  href="/TimeOff/new"
+  className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-bold text-indigo-700 shadow-lg transition hover:-translate-y-0.5 hover:bg-indigo-50"
+>
+  + New Leave Request
+</Link>
       </div>
 
       {/* Statistics */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-
-        {/* Total */}
+        {/* Total Requests */}
         <div className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg">
           <div className="flex items-center justify-between">
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
-              <Users size={22} />
+              <CalendarDays size={22} />
             </div>
 
-            <CalendarDays
-              size={18}
-              className="text-slate-300 group-hover:text-indigo-500"
-            />
+            <span className="rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-semibold text-indigo-600">
+              All
+            </span>
           </div>
 
           <p className="mt-5 text-sm font-medium text-slate-500">
-            Total Employees
+            Leave Requests
           </p>
 
           <p className="mt-1 text-3xl font-bold text-slate-900">
-            {attendanceRecords.length}
+            {leaveRecords.length}
           </p>
 
           <p className="mt-2 text-xs text-slate-400">
-            Attendance records today
+            Total leave requests
           </p>
         </div>
 
-        {/* Present */}
+        {/* Approved */}
         <div className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg">
           <div className="flex items-center justify-between">
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
-              <UserCheck size={22} />
-            </div>
-
-            <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-600">
-              On Time
-            </span>
-          </div>
-
-          <p className="mt-5 text-sm font-medium text-slate-500">
-            Present
-          </p>
-
-          <p className="mt-1 text-3xl font-bold text-slate-900">
-            {presentCount}
-          </p>
-
-          <p className="mt-2 text-xs text-slate-400">
-            Employees checked in
-          </p>
-        </div>
-
-        {/* Late */}
-        <div className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg">
-          <div className="flex items-center justify-between">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
-              <AlertCircle size={22} />
-            </div>
-
-            <span className="rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-600">
-              Attention
-            </span>
-          </div>
-
-          <p className="mt-5 text-sm font-medium text-slate-500">
-            Late Arrivals
-          </p>
-
-          <p className="mt-1 text-3xl font-bold text-slate-900">
-            {lateCount}
-          </p>
-
-          <p className="mt-2 text-xs text-slate-400">
-            Employees arrived late
-          </p>
-        </div>
-
-        {/* Absent */}
-        <div className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg">
-          <div className="flex items-center justify-between">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-rose-50 text-rose-600">
               <CheckCircle2 size={22} />
             </div>
 
-            <span className="rounded-full bg-rose-50 px-2.5 py-1 text-xs font-semibold text-rose-600">
-              Follow Up
+            <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-600">
+              Approved
             </span>
           </div>
 
           <p className="mt-5 text-sm font-medium text-slate-500">
-            Absent
+            Approved
           </p>
 
           <p className="mt-1 text-3xl font-bold text-slate-900">
-            {absentCount}
+            {approvedCount}
           </p>
 
           <p className="mt-2 text-xs text-slate-400">
-            No attendance recorded
+            Approved leave requests
+          </p>
+        </div>
+
+        {/* Pending */}
+        <div className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg">
+          <div className="flex items-center justify-between">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
+              <Clock3 size={22} />
+            </div>
+
+            <span className="rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-600">
+              Action Needed
+            </span>
+          </div>
+
+          <p className="mt-5 text-sm font-medium text-slate-500">
+            Pending
+          </p>
+
+          <p className="mt-1 text-3xl font-bold text-slate-900">
+            {pendingCount}
+          </p>
+
+          <p className="mt-2 text-xs text-slate-400">
+            Waiting for approval
+          </p>
+        </div>
+
+        {/* Approved Days */}
+        <div className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg">
+          <div className="flex items-center justify-between">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-violet-50 text-violet-600">
+              <Users size={22} />
+            </div>
+
+            <span className="rounded-full bg-violet-50 px-2.5 py-1 text-xs font-semibold text-violet-600">
+              Days
+            </span>
+          </div>
+
+          <p className="mt-5 text-sm font-medium text-slate-500">
+            Approved Days
+          </p>
+
+          <p className="mt-1 text-3xl font-bold text-slate-900">
+            {totalDays}
+          </p>
+
+          <p className="mt-2 text-xs text-slate-400">
+            Total approved leave days
           </p>
         </div>
       </div>
 
-      {/* Attendance Table */}
+      {/* Leave Requests */}
       <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
-
-        {/* Table Header */}
+        {/* Top Section */}
         <div className="border-b border-slate-100 p-5 sm:p-6">
           <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
-
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-xl font-bold text-slate-900">
-                  Attendance Records
+                  Leave Requests
                 </h2>
 
                 <span className="rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-semibold text-indigo-600">
-                  {attendanceRecords.length}
+                  {leaveRecords.length}
                 </span>
               </div>
 
               <p className="mt-1 text-sm text-slate-500">
-                Daily employee attendance and working hours.
+                Review employee leave requests and their approval status.
               </p>
             </div>
 
             {/* Search + Filters */}
             <div className="flex w-full flex-col gap-3 sm:flex-row xl:w-auto">
-
-              {/* Search */}
               <div className="flex h-11 w-full items-center rounded-xl border border-slate-200 bg-slate-50 px-3 transition focus-within:border-indigo-400 focus-within:bg-white focus-within:ring-4 focus-within:ring-indigo-50 sm:w-72">
                 <Search size={18} className="shrink-0 text-slate-400" />
 
                 <input
-  type="text"
-  value={search}
-  onChange={(e) => setSearch(e.target.value)}
-  placeholder="Search employee..."></input>
+                  type="text"
+                  placeholder="Search employee..."
+                  className="ml-2 w-full bg-transparent text-sm text-slate-700 outline-none placeholder:text-slate-400"
+                />
               </div>
 
-              {/* Date */}
-              <input
-                type="date"
-                value={dateFilter}
-                onChange={(e) => setDateFilter(e.target.value)}
-              />
-                
-
-              {/* Status */}
-              <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 text-sm font-medium text-slate-600 outline-none transition focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-50 sm:w-36"
-              >
+              <select className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 text-sm font-medium text-slate-600 outline-none transition focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-50 sm:w-40">
                 <option>All Status</option>
-                <option>Present</option>
-                <option>Late</option>
-                <option>Absent</option>
+                <option>Approved</option>
+                <option>Pending</option>
+                <option>Refused</option>
+              </select>
+
+              <select className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 text-sm font-medium text-slate-600 outline-none transition focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-50 sm:w-40">
+                <option>All Types</option>
+                <option>Paid Time Off</option>
+                <option>Sick Leave</option>
+                <option>Casual Leave</option>
               </select>
             </div>
           </div>
@@ -292,8 +265,7 @@ const filteredRecords = attendanceRecords.filter((record) => {
 
         {/* Desktop Table */}
         <div className="hidden overflow-x-auto lg:block">
-          <table className="w-full min-w-[1000px]">
-
+          <table className="w-full min-w-[1100px]">
             <thead>
               <tr className="border-b border-slate-100 bg-slate-50/80">
                 <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-500">
@@ -301,19 +273,15 @@ const filteredRecords = attendanceRecords.filter((record) => {
                 </th>
 
                 <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-500">
-                  Date
+                  Leave Type
                 </th>
 
                 <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-500">
-                  Check In
+                  Leave Period
                 </th>
 
                 <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-500">
-                  Check Out
-                </th>
-
-                <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-500">
-                  Worked Hours
+                  Days
                 </th>
 
                 <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-500">
@@ -323,97 +291,86 @@ const filteredRecords = attendanceRecords.filter((record) => {
             </thead>
 
             <tbody>
-              {attendanceRecords.map((record) => (
+              {leaveRecords.map((leave) => (
                 <tr
-                  key={record.id}
+                  key={leave.id}
                   className="group border-b border-slate-100 transition hover:bg-indigo-50/30"
                 >
                   {/* Employee */}
                   <td className="px-6 py-5">
                     <div className="flex items-center gap-3">
-
                       <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-violet-600 text-sm font-bold text-white shadow-sm">
-                        {record.employee.charAt(0)}
+                        {leave.employee.charAt(0)}
                       </div>
 
                       <div>
                         <p className="font-semibold text-slate-900">
-                          {record.employee}
+                          {leave.employee}
                         </p>
 
                         <p className="mt-0.5 text-xs text-slate-500">
-                          {record.department}
+                          {leave.department}
                         </p>
                       </div>
                     </div>
                   </td>
 
-                  {/* Date */}
+                  {/* Leave Type */}
                   <td className="px-6 py-5">
-                    <div className="flex items-center gap-2 text-sm font-medium text-slate-700">
-                      <CalendarDays
-                        size={16}
-                        className="text-indigo-500"
-                      />
-                      {record.date}
+                    <span className="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-600">
+                      {leave.leaveType}
+                    </span>
+                  </td>
+
+                  {/* Period */}
+                  <td className="px-6 py-5">
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2 text-sm font-medium text-slate-700">
+                        <CalendarDays
+                          size={15}
+                          className="text-indigo-500"
+                        />
+                        {leave.startDate}
+                      </div>
+
+                      <p className="pl-5 text-xs text-slate-400">
+                        to {leave.endDate}
+                      </p>
                     </div>
                   </td>
 
-                  {/* Check In */}
+                  {/* Days */}
                   <td className="px-6 py-5">
-                    <div className="flex items-center gap-2 text-sm font-semibold text-slate-700">
-                      <Clock3
-                        size={16}
-                        className="text-emerald-500"
-                      />
-                      {record.checkIn}
-                    </div>
-                  </td>
-
-                  {/* Check Out */}
-                  <td className="px-6 py-5">
-                    <div className="flex items-center gap-2 text-sm font-semibold text-slate-700">
-                      <Clock3
-                        size={16}
-                        className="text-rose-400"
-                      />
-                      {record.checkOut}
-                    </div>
-                  </td>
-
-                  {/* Worked Hours */}
-                  <td className="px-6 py-5">
-                    <div className="flex items-center gap-2 text-sm font-bold text-slate-800">
-                      <Timer
-                        size={16}
-                        className="text-indigo-500"
-                      />
-                      {record.workedHours}
-                    </div>
+                    <span className="font-bold text-slate-800">
+                      {leave.days}{" "}
+                      <span className="text-xs font-normal text-slate-400">
+                        {leave.days === 1 ? "day" : "days"}
+                      </span>
+                    </span>
                   </td>
 
                   {/* Status */}
                   <td className="px-6 py-5">
                     <span
                       className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-bold ${
-                        record.status === "Present"
+                        leave.status === "Approved"
                           ? "bg-emerald-50 text-emerald-600"
-                          : record.status === "Late"
+                          : leave.status === "Pending"
                             ? "bg-amber-50 text-amber-600"
                             : "bg-rose-50 text-rose-600"
                       }`}
                     >
                       <span
                         className={`h-1.5 w-1.5 rounded-full ${
-                          record.status === "Present"
+                          leave.status === "Approved"
                             ? "bg-emerald-500"
-                            : record.status === "Late"
+                            : leave.status === "Pending"
                               ? "bg-amber-500"
                               : "bg-rose-500"
                         }`}
                       />
 
-                      {record.status}
+                      {leave.status}
                     </span>
                   </td>
                 </tr>
@@ -424,84 +381,84 @@ const filteredRecords = attendanceRecords.filter((record) => {
 
         {/* Mobile Cards */}
         <div className="divide-y divide-slate-100 lg:hidden">
-          {attendanceRecords.map((record) => (
+          {leaveRecords.map((leave) => (
             <div
-              key={record.id}
+              key={leave.id}
               className="p-5 transition hover:bg-slate-50 sm:p-6"
             >
               <div className="flex items-start justify-between gap-3">
-
                 <div className="flex min-w-0 items-center gap-3">
                   <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-violet-600 text-sm font-bold text-white">
-                    {record.employee.charAt(0)}
+                    {leave.employee.charAt(0)}
                   </div>
 
                   <div className="min-w-0">
                     <p className="truncate font-semibold text-slate-900">
-                      {record.employee}
+                      {leave.employee}
                     </p>
 
                     <p className="truncate text-xs text-slate-500">
-                      {record.department}
+                      {leave.department}
                     </p>
                   </div>
                 </div>
 
                 <span
                   className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-bold ${
-                    record.status === "Present"
+                    leave.status === "Approved"
                       ? "bg-emerald-50 text-emerald-600"
-                      : record.status === "Late"
+                      : leave.status === "Pending"
                         ? "bg-amber-50 text-amber-600"
                         : "bg-rose-50 text-rose-600"
                   }`}
                 >
-                  {record.status}
+                  {leave.status}
                 </span>
               </div>
 
-              <div className="mt-5 grid grid-cols-2 gap-3">
-
+              <div className="mt-5 space-y-3">
                 <div className="rounded-xl bg-slate-50 p-3">
                   <p className="text-xs text-slate-400">
-                    Check In
+                    Leave Type
                   </p>
 
                   <p className="mt-1 text-sm font-semibold text-slate-700">
-                    {record.checkIn}
+                    {leave.leaveType}
                   </p>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="rounded-xl bg-slate-50 p-3">
+                    <p className="text-xs text-slate-400">
+                      Start Date
+                    </p>
+
+                    <p className="mt-1 text-sm font-semibold text-slate-700">
+                      {leave.startDate}
+                    </p>
+                  </div>
+
+                  <div className="rounded-xl bg-slate-50 p-3">
+                    <p className="text-xs text-slate-400">
+                      End Date
+                    </p>
+
+                    <p className="mt-1 text-sm font-semibold text-slate-700">
+                      {leave.endDate}
+                    </p>
+                  </div>
                 </div>
 
                 <div className="rounded-xl bg-slate-50 p-3">
                   <p className="text-xs text-slate-400">
-                    Check Out
-                  </p>
-
-                  <p className="mt-1 text-sm font-semibold text-slate-700">
-                    {record.checkOut}
-                  </p>
-                </div>
-
-                <div className="rounded-xl bg-slate-50 p-3">
-                  <p className="text-xs text-slate-400">
-                    Worked Hours
+                    Leave Duration
                   </p>
 
                   <p className="mt-1 text-sm font-bold text-slate-800">
-                    {record.workedHours}
+                    {leave.days}{" "}
+                    {leave.days === 1 ? "day" : "days"}
                   </p>
                 </div>
-
-                <div className="rounded-xl bg-slate-50 p-3">
-                  <p className="text-xs text-slate-400">
-                    Date
-                  </p>
-
-                  <p className="mt-1 text-sm font-semibold text-slate-700">
-                    {record.date}
-                  </p>
-                </div>
-
               </div>
             </div>
           ))}
@@ -509,21 +466,20 @@ const filteredRecords = attendanceRecords.filter((record) => {
 
         {/* Footer */}
         <div className="flex flex-col gap-3 border-t border-slate-100 bg-slate-50/50 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-
           <div className="flex items-center gap-2 text-sm text-slate-500">
-            <Clock3 size={16} />
+            <CalendarDays size={16} />
 
             Showing
 
             <span className="font-bold text-slate-700">
-              {attendanceRecords.length}
+              {leaveRecords.length}
             </span>
 
-            attendance records
+            leave requests
           </div>
 
           <div className="text-xs text-slate-400">
-            Attendance is generated from employee check-in/out
+            Approved leave affects employee leave balance
           </div>
         </div>
       </div>

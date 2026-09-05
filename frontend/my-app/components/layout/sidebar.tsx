@@ -38,7 +38,7 @@ const menuItems = [
   },
   {
     name: "Time Off",
-    href: "/time-off",
+    href: "/TimeOff",
     icon: CalendarDays,
   },
   {
