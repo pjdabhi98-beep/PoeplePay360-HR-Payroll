@@ -90,6 +90,7 @@
             <list>
                 <field name="name"/>
                 <field name="employee_code"/>
+                <field name="user_id"/>
                 <field name="department"/>
                 <field name="job_position"/>
                 <field name="schedule_id"/>
@@ -116,6 +117,7 @@
                     <group>
                         <group>
                             <field name="employee_code"/>
+                            <field name="user_id"/>
                             <field name="department"/>
                             <field name="job_position"/>
                         </group>
@@ -889,138 +891,135 @@
     <!-- ========================================================= -->
     <!-- PEOPLEPAY360 ROOT APP -->
     <!-- ========================================================= -->
-
-    <menuitem
-        id="menu_peoplepay_root"
-        name="PeoplePay360"
-        action="action_peoplepay_home"
-        sequence="10"
-        groups="base.group_user"
-    />
-
-
     <!-- ========================================================= -->
-    <!-- HR -->
-    <!-- ========================================================= -->
+<!-- PEOPLEPAY360 ROOT APP -->
+<!-- ========================================================= -->
 
-    <menuitem
-        id="menu_peoplepay_hr"
-        name="HR"
-        parent="menu_peoplepay_root"
-        sequence="10"
-        groups="base.group_user"
-    />
+<menuitem
+    id="menu_peoplepay_root"
+    name="PeoplePay360"
+    sequence="10"
+/>
 
-    <menuitem
-        id="menu_peoplepay_employee"
-        name="Employees"
-        parent="menu_peoplepay_hr"
-        action="action_peoplepay_employee"
-        sequence="10"
-        groups="base.group_user"
-    />
+<!-- ========================================================= -->
+<!-- HR -->
+<!-- ========================================================= -->
 
-    <menuitem
-        id="menu_peoplepay_contract"
-        name="Contracts"
-        parent="menu_peoplepay_hr"
-        action="action_peoplepay_contract"
-        sequence="20"
-        groups="base.group_user"
-    />
+<menuitem
+    id="menu_peoplepay_hr"
+    name="HR"
+    parent="menu_peoplepay_root"
+    sequence="10"
+/>
 
-    <menuitem
-        id="menu_peoplepay_schedule"
-        name="Working Schedules"
-        parent="menu_peoplepay_hr"
-        action="action_peoplepay_working_schedule"
-        sequence="30"
-        groups="base.group_user"
-    />
+<menuitem
+    id="menu_peoplepay_employee"
+    name="Employees"
+    parent="menu_peoplepay_hr"
+    action="action_peoplepay_employee"
+    sequence="10"
+    groups="odoo.group_peoplepay_hr_manager,odoo.group_peoplepay_hr_officer,odoo.group_peoplepay_employee"
+/>
 
-    <menuitem
-        id="menu_peoplepay_attendance"
-        name="Attendance"
-        parent="menu_peoplepay_hr"
-        action="action_peoplepay_attendance"
-        sequence="40"
-        groups="base.group_user"
-    />
+<menuitem
+    id="menu_peoplepay_contract"
+    name="Contracts"
+    parent="menu_peoplepay_hr"
+    action="action_peoplepay_contract"
+    sequence="20"
+    groups="odoo.group_peoplepay_hr_manager,odoo.group_peoplepay_hr_officer,odoo.group_peoplepay_employee"
+/>
 
-    <menuitem
-        id="menu_peoplepay_time_off_type"
-        name="Time Off Types"
-        parent="menu_peoplepay_hr"
-        action="action_peoplepay_time_off_type"
-        sequence="50"
-        groups="base.group_user"
-    />
+<menuitem
+    id="menu_peoplepay_schedule"
+    name="Working Schedules"
+    parent="menu_peoplepay_hr"
+    action="action_peoplepay_working_schedule"
+    sequence="30"
+    groups="odoo.group_peoplepay_hr_manager,odoo.group_peoplepay_hr_officer,odoo.group_peoplepay_employee"
+/>
 
-    <menuitem
-        id="menu_peoplepay_time_off_allocation"
-        name="Time Off Allocations"
-        parent="menu_peoplepay_hr"
-        action="action_peoplepay_time_off_allocation"
-        sequence="60"
-        groups="base.group_user"
-    />
+<menuitem
+    id="menu_peoplepay_attendance"
+    name="Attendance"
+    parent="menu_peoplepay_hr"
+    action="action_peoplepay_attendance"
+    sequence="40"
+    groups="odoo.group_peoplepay_hr_manager,odoo.group_peoplepay_hr_officer,odoo.group_peoplepay_employee"
+/>
 
-    <menuitem
-        id="menu_peoplepay_time_off_request"
-        name="Time Off Requests"
-        parent="menu_peoplepay_hr"
-        action="action_peoplepay_time_off_request"
-        sequence="70"
-        groups="base.group_user"
-    />
+<menuitem
+    id="menu_peoplepay_time_off_type"
+    name="Time Off Types"
+    parent="menu_peoplepay_hr"
+    action="action_peoplepay_time_off_type"
+    sequence="50"
+    groups="odoo.group_peoplepay_hr_manager,odoo.group_peoplepay_hr_officer"
+/>
+
+<menuitem
+    id="menu_peoplepay_time_off_allocation"
+    name="Time Off Allocations"
+    parent="menu_peoplepay_hr"
+    action="action_peoplepay_time_off_allocation"
+    sequence="60"
+    groups="odoo.group_peoplepay_hr_manager,odoo.group_peoplepay_hr_officer"
+/>
+
+<menuitem
+    id="menu_peoplepay_time_off_request"
+    name="Time Off Requests"
+    parent="menu_peoplepay_hr"
+    action="action_peoplepay_time_off_request"
+    sequence="70"
+    groups="odoo.group_peoplepay_hr_manager,odoo.group_peoplepay_hr_officer,odoo.group_peoplepay_employee"
+/>
 
 
-    <!-- ========================================================= -->
-    <!-- PAYROLL -->
-    <!-- ========================================================= -->
+<!-- ========================================================= -->
+<!-- PAYROLL -->
+<!-- ========================================================= -->
 
-    <menuitem
-        id="menu_peoplepay_payroll"
-        name="Payroll"
-        parent="menu_peoplepay_root"
-        sequence="20"
-        groups="base.group_user"
-    />
+<menuitem
+    id="menu_peoplepay_payroll"
+    name="Payroll"
+    parent="menu_peoplepay_root"
+    sequence="20"
+/>
 
-    <menuitem
-        id="menu_peoplepay_salary_structure"
-        name="Salary Structures"
-        parent="menu_peoplepay_payroll"
-        action="action_peoplepay_salary_structure"
-        sequence="10"
-        groups="base.group_user"
-    />
+<menuitem
+    id="menu_peoplepay_salary_structure"
+    name="Salary Structures"
+    parent="menu_peoplepay_payroll"
+    action="action_peoplepay_salary_structure"
+    sequence="10"
+    groups="odoo.group_peoplepay_hr_manager,odoo.group_peoplepay_hr_officer"
+/>
 
-    <menuitem
-        id="menu_peoplepay_salary_rule"
-        name="Salary Rules"
-        parent="menu_peoplepay_payroll"
-        action="action_peoplepay_salary_rule"
-        sequence="20"
-        groups="base.group_user"
-    />
+<menuitem
+    id="menu_peoplepay_salary_rule"
+    name="Salary Rules"
+    parent="menu_peoplepay_payroll"
+    action="action_peoplepay_salary_rule"
+    sequence="20"
+    groups="odoo.group_peoplepay_hr_manager,odoo.group_peoplepay_hr_officer"
+/>
 
-    <menuitem
-        id="menu_peoplepay_payrun"
-        name="Payruns"
-        parent="menu_peoplepay_payroll"
-        action="action_peoplepay_payrun"
-        sequence="30"
-        groups="base.group_user"
-    />
+<menuitem
+    id="menu_peoplepay_payrun"
+    name="Payruns"
+    parent="menu_peoplepay_payroll"
+    action="action_peoplepay_payrun"
+    sequence="30"
+    groups="odoo.group_peoplepay_hr_manager,odoo.group_peoplepay_hr_officer"
+/>
 
-    <menuitem
-        id="menu_peoplepay_payslip"
-        name="Payslips"
-        parent="menu_peoplepay_payroll"
-        action="action_peoplepay_payslip"
-        sequence="40"
-        groups="base.group_user"
-    />
-
-</odoo>
+<menuitem
+    id="menu_peoplepay_payslip"
+    name="Payslips"
+    parent="menu_peoplepay_payroll"
+    action="action_peoplepay_payslip"
+    sequence="40"
+    groups="odoo.group_peoplepay_hr_manager,odoo.group_peoplepay_hr_officer,odoo.group_peoplepay_employee"
+/>
+   </odoo>

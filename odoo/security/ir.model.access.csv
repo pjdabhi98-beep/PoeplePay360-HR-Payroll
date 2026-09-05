@@ -1,13 +1,69 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_peoplepay_employee,peoplepay.employee,model_peoplepay_employee,base.group_user,1,1,1,1
-access_peoplepay_contract,peoplepay.contract,model_peoplepay_contract,base.group_user,1,1,1,1
-access_peoplepay_working_schedule,peoplepay.working.schedule,model_peoplepay_working_schedule,base.group_user,1,1,1,1
-access_peoplepay_attendance,peoplepay.attendance,model_peoplepay_attendance,base.group_user,1,1,1,1
-access_peoplepay_time_off_type,peoplepay.time.off.type,model_peoplepay_time_off_type,base.group_user,1,1,1,1
-access_peoplepay_time_off_allocation,peoplepay.time.off.allocation,model_peoplepay_time_off_allocation,base.group_user,1,1,1,1
-access_peoplepay_time_off_request,peoplepay.time.off.request,model_peoplepay_time_off_request,base.group_user,1,1,1,1
-access_peoplepay_salary_structure,peoplepay.salary.structure,model_peoplepay_salary_structure,base.group_user,1,1,1,1
-access_peoplepay_salary_rule,peoplepay.salary.rule,model_peoplepay_salary_rule,base.group_user,1,1,1,1
-access_peoplepay_payrun,peoplepay.payrun,model_peoplepay_payrun,base.group_user,1,1,1,1
-access_peoplepay_payslip,peoplepay.payslip,model_peoplepay_payslip,base.group_user,1,1,1,1
-access_peoplepay_payslip_line,peoplepay.payslip.line,model_peoplepay_payslip_line,base.group_user,1,1,1,1
+
+access_employee_admin,Employee Administrator,model_peoplepay_employee,odoo.group_peoplepay_admin,1,1,1,1
+access_employee_manager,Employee Manager,model_peoplepay_employee,odoo.group_peoplepay_hr_manager,1,1,1,1
+access_employee_officer,Employee Officer,model_peoplepay_employee,odoo.group_peoplepay_hr_officer,1,1,1,0
+access_employee_user,Employee Employee,model_peoplepay_employee,odoo.group_peoplepay_employee,1,1,0,0
+
+access_contract_admin,Contract Administrator,model_peoplepay_contract,odoo.group_peoplepay_admin,1,1,1,1
+access_contract_manager,Contract Manager,model_peoplepay_contract,odoo.group_peoplepay_hr_manager,1,1,1,1
+access_contract_officer,Contract Officer,model_peoplepay_contract,odoo.group_peoplepay_hr_officer,1,1,1,0
+access_contract_user,Contract Employee,model_peoplepay_contract,odoo.group_peoplepay_employee,1,0,0,0
+
+access_schedule_admin,Schedule Administrator,model_peoplepay_working_schedule,odoo.group_peoplepay_admin,1,1,1,1
+access_schedule_manager,Schedule Manager,model_peoplepay_working_schedule,odoo.group_peoplepay_hr_manager,1,1,1,1
+access_schedule_officer,Schedule Officer,model_peoplepay_working_schedule,odoo.group_peoplepay_hr_officer,1,1,1,0
+access_schedule_user,Schedule Employee,model_peoplepay_working_schedule,odoo.group_peoplepay_employee,1,0,0,0
+
+access_attendance_admin,Attendance Administrator,model_peoplepay_attendance,odoo.group_peoplepay_admin,1,1,1,1
+access_attendance_manager,Attendance Manager,model_peoplepay_attendance,odoo.group_peoplepay_hr_manager,1,1,1,1
+access_attendance_officer,Attendance Officer,model_peoplepay_attendance,odoo.group_peoplepay_hr_officer,1,1,1,0
+access_attendance_user,Attendance Employee,model_peoplepay_attendance,odoo.group_peoplepay_employee,1,1,1,0
+
+access_timeoff_type_admin,Time Off Type Administrator,model_peoplepay_time_off_type,odoo.group_peoplepay_admin,1,1,1,1
+access_timeoff_type_manager,Time Off Type Manager,model_peoplepay_time_off_type,odoo.group_peoplepay_hr_manager,1,1,1,1
+access_timeoff_type_officer,Time Off Type Officer,model_peoplepay_time_off_type,odoo.group_peoplepay_hr_officer,1,0,0,0
+
+access_allocation_admin,Allocation Administrator,model_peoplepay_time_off_allocation,odoo.group_peoplepay_admin,1,1,1,1
+access_allocation_manager,Allocation Manager,model_peoplepay_time_off_allocation,odoo.group_peoplepay_hr_manager,1,1,1,1
+access_allocation_officer,Allocation Officer,model_peoplepay_time_off_allocation,odoo.group_peoplepay_hr_officer,1,0,1,0
+access_allocation_user,Allocation Employee,model_peoplepay_time_off_allocation,odoo.group_peoplepay_employee,1,0,0,0
+
+access_timeoff_request_admin,Time Off Request Administrator,model_peoplepay_time_off_request,odoo.group_peoplepay_admin,1,1,1,1
+access_timeoff_request_manager,Time Off Request Manager,model_peoplepay_time_off_request,odoo.group_peoplepay_hr_manager,1,1,1,1
+access_timeoff_request_officer,Time Off Request Officer,model_peoplepay_time_off_request,odoo.group_peoplepay_hr_officer,1,1,1,0
+access_timeoff_request_user,Time Off Request Employee,model_peoplepay_time_off_request,odoo.group_peoplepay_employee,1,1,1,0
+
+access_salary_structure_admin,Salary Structure Administrator,model_peoplepay_salary_structure,odoo.group_peoplepay_admin,1,1,1,1
+access_salary_structure_manager,Salary Structure Manager,model_peoplepay_salary_structure,odoo.group_peoplepay_hr_manager,1,1,1,1
+access_salary_structure_officer,Salary Structure Officer,model_peoplepay_salary_structure,odoo.group_peoplepay_hr_officer,1,0,0,0
+
+access_salary_rule_admin,Salary Rule Administrator,model_peoplepay_salary_rule,odoo.group_peoplepay_admin,1,1,1,1
+access_salary_rule_manager,Salary Rule Manager,model_peoplepay_salary_rule,odoo.group_peoplepay_hr_manager,1,1,1,1
+access_salary_rule_officer,Salary Rule Officer,model_peoplepay_salary_rule,odoo.group_peoplepay_hr_officer,1,0,0,0
+
+access_payrun_admin,Payrun Administrator,model_peoplepay_payrun,odoo.group_peoplepay_admin,1,1,1,1
+access_payrun_manager,Payrun Manager,model_peoplepay_payrun,odoo.group_peoplepay_hr_manager,1,1,1,1
+access_payrun_officer,Payrun Officer,model_peoplepay_payrun,odoo.group_peoplepay_hr_officer,1,1,1,0
+
+access_payslip_admin,Payslip Administrator,model_peoplepay_payslip,odoo.group_peoplepay_admin,1,1,1,1
+access_payslip_manager,Payslip Manager,model_peoplepay_payslip,odoo.group_peoplepay_hr_manager,1,1,1,1
+access_payslip_officer,Payslip Officer,model_peoplepay_payslip,odoo.group_peoplepay_hr_officer,1,1,1,0
+access_payslip_user,Payslip Employee,model_peoplepay_payslip,odoo.group_peoplepay_employee,1,0,0,0
+
+access_payslip_line_admin,Payslip Line Administrator,model_peoplepay_payslip_line,odoo.group_peoplepay_admin,1,1,1,1
+access_payslip_line_manager,Payslip Line Manager,model_peoplepay_payslip_line,odoo.group_peoplepay_hr_manager,1,1,1,1
+access_payslip_line_officer,Payslip Line Officer,model_peoplepay_payslip_line,odoo.group_peoplepay_hr_officer,1,0,0,0
+access_payslip_line_user,Payslip Line Employee,model_peoplepay_payslip_line,odoo.group_peoplepay_employee,1,0,0,0
+access_employee_system,Employee System Administrator,model_peoplepay_employee,base.group_system,1,1,1,1
+access_contract_system,Contract System Administrator,model_peoplepay_contract,base.group_system,1,1,1,1
+access_schedule_system,Schedule System Administrator,model_peoplepay_working_schedule,base.group_system,1,1,1,1
+access_attendance_system,Attendance System Administrator,model_peoplepay_attendance,base.group_system,1,1,1,1
+access_timeoff_type_system,Time Off Type System Administrator,model_peoplepay_time_off_type,base.group_system,1,1,1,1
+access_allocation_system,Allocation System Administrator,model_peoplepay_time_off_allocation,base.group_system,1,1,1,1
+access_timeoff_request_system,Time Off Request System Administrator,model_peoplepay_time_off_request,base.group_system,1,1,1,1
+access_salary_structure_system,Salary Structure System Administrator,model_peoplepay_salary_structure,base.group_system,1,1,1,1
+access_salary_rule_system,Salary Rule System Administrator,model_peoplepay_salary_rule,base.group_system,1,1,1,1
+access_payrun_system,Payrun System Administrator,model_peoplepay_payrun,base.group_system,1,1,1,1
+access_payslip_system,Payslip System Administrator,model_peoplepay_payslip,base.group_system,1,1,1,1
+access_payslip_line_system,Payslip Line System Administrator,model_peoplepay_payslip_line,base.group_system,1,1,1,1

@@ -77,6 +77,11 @@ class PeoplePayEmployee(models.Model):
         string="Payslips",
         compute="_compute_payslip_count"
     )
+    user_id = fields.Many2one(
+        "res.users",
+        string="User",
+        ondelete="set null"
+)
 
     @classmethod
     def _build_count(cls, records, field_name):
