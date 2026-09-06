@@ -918,7 +918,7 @@
     parent="menu_peoplepay_hr"
     action="action_peoplepay_employee"
     sequence="10"
-    groups="odoo.group_peoplepay_hr_manager,odoo.group_peoplepay_hr_officer,odoo.group_peoplepay_employee"
+    groups="peoplepay360.group_peoplepay_hr_manager,peoplepay360.group_peoplepay_hr_officer,peoplepay360.group_peoplepay_employee"
 />
 
 <menuitem
@@ -927,7 +927,7 @@
     parent="menu_peoplepay_hr"
     action="action_peoplepay_contract"
     sequence="20"
-    groups="odoo.group_peoplepay_hr_manager,odoo.group_peoplepay_hr_officer,odoo.group_peoplepay_employee"
+    groups="peoplepay360.group_peoplepay_hr_manager,peoplepay360.group_peoplepay_hr_officer,peoplepay360.group_peoplepay_employee"
 />
 
 <menuitem
@@ -936,7 +936,7 @@
     parent="menu_peoplepay_hr"
     action="action_peoplepay_working_schedule"
     sequence="30"
-    groups="odoo.group_peoplepay_hr_manager,odoo.group_peoplepay_hr_officer,odoo.group_peoplepay_employee"
+    groups="peoplepay360.group_peoplepay_hr_manager,peoplepay360.group_peoplepay_hr_officer,peoplepay360.group_peoplepay_employee"
 />
 
 <menuitem
@@ -945,7 +945,7 @@
     parent="menu_peoplepay_hr"
     action="action_peoplepay_attendance"
     sequence="40"
-    groups="odoo.group_peoplepay_hr_manager,odoo.group_peoplepay_hr_officer,odoo.group_peoplepay_employee"
+    groups="peoplepay360.group_peoplepay_hr_manager,peoplepay360.group_peoplepay_hr_officer,peoplepay360.group_peoplepay_employee"
 />
 
 <menuitem
@@ -954,7 +954,7 @@
     parent="menu_peoplepay_hr"
     action="action_peoplepay_time_off_type"
     sequence="50"
-    groups="odoo.group_peoplepay_hr_manager,odoo.group_peoplepay_hr_officer"
+    groups="peoplepay360.group_peoplepay_hr_manager,peoplepay360.group_peoplepay_hr_officer"
 />
 
 <menuitem
@@ -963,7 +963,7 @@
     parent="menu_peoplepay_hr"
     action="action_peoplepay_time_off_allocation"
     sequence="60"
-    groups="odoo.group_peoplepay_hr_manager,odoo.group_peoplepay_hr_officer"
+    groups="peoplepay360.group_peoplepay_hr_manager,peoplepay360.group_peoplepay_hr_officer"
 />
 
 <menuitem
@@ -972,7 +972,7 @@
     parent="menu_peoplepay_hr"
     action="action_peoplepay_time_off_request"
     sequence="70"
-    groups="odoo.group_peoplepay_hr_manager,odoo.group_peoplepay_hr_officer,odoo.group_peoplepay_employee"
+    groups="peoplepay360.group_peoplepay_hr_manager,peoplepay360.group_peoplepay_hr_officer,peoplepay360.group_peoplepay_employee"
 />
 
 
@@ -993,7 +993,7 @@
     parent="menu_peoplepay_payroll"
     action="action_peoplepay_salary_structure"
     sequence="10"
-    groups="odoo.group_peoplepay_hr_manager,odoo.group_peoplepay_hr_officer"
+    groups="peoplepay360.group_peoplepay_hr_manager,peoplepay360.group_peoplepay_hr_officer"
 />
 
 <menuitem
@@ -1002,7 +1002,7 @@
     parent="menu_peoplepay_payroll"
     action="action_peoplepay_salary_rule"
     sequence="20"
-    groups="odoo.group_peoplepay_hr_manager,odoo.group_peoplepay_hr_officer"
+    groups="peoplepay360.group_peoplepay_hr_manager,peoplepay360.group_peoplepay_hr_officer"
 />
 
 <menuitem
@@ -1011,7 +1011,7 @@
     parent="menu_peoplepay_payroll"
     action="action_peoplepay_payrun"
     sequence="30"
-    groups="odoo.group_peoplepay_hr_manager,odoo.group_peoplepay_hr_officer"
+    groups="peoplepay360.group_peoplepay_hr_manager,peoplepay360.group_peoplepay_hr_officer"
 />
 
 <menuitem
@@ -1020,6 +1020,6 @@
     parent="menu_peoplepay_payroll"
     action="action_peoplepay_payslip"
     sequence="40"
-    groups="odoo.group_peoplepay_hr_manager,odoo.group_peoplepay_hr_officer,odoo.group_peoplepay_employee"
+    groups="peoplepay360.group_peoplepay_hr_manager,peoplepay360.group_peoplepay_hr_officer,peoplepay360.group_peoplepay_employee"
 />
    </odoo>

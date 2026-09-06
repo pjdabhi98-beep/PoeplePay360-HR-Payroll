@@ -10,9 +10,15 @@ from app.config import (
 
 class OdooService:
 
+    def __init__(self):
+        self.url = f"{ODOO_URL}/jsonrpc"
+        self.db = ODOO_DB
+        self.username = ODOO_USERNAME
+        self.password = ODOO_PASSWORD
+
     def authenticate(self):
         response = requests.post(
-            f"{ODOO_URL}/jsonrpc",
+            self.url,
             json={
                 "jsonrpc": "2.0",
                 "method": "call",
@@ -20,29 +26,42 @@ class OdooService:
                     "service": "common",
                     "method": "authenticate",
                     "args": [
-                        ODOO_DB,
-                        ODOO_USERNAME,
-                        ODOO_PASSWORD,
+                        self.db,
+                        self.username,
+                        self.password,
                         {},
                     ],
                 },
                 "id": 1,
             },
+            timeout=10,
         )
 
-        result = response.json()
+        response.raise_for_status()
 
-        if not result.get("result"):
+        data = response.json()
+
+        if "error" in data:
+            raise Exception(data["error"])
+
+        uid = data.get("result")
+
+        if not uid:
             raise Exception("Odoo authentication failed")
 
-        return result["result"]
+        return uid
 
-    def execute(self, model, method, args=None, kwargs=None):
-
+    def execute(
+        self,
+        model,
+        method,
+        args=None,
+        kwargs=None,
+    ):
         uid = self.authenticate()
 
         response = requests.post(
-            f"{ODOO_URL}/jsonrpc",
+            self.url,
             json={
                 "jsonrpc": "2.0",
                 "method": "call",
@@ -50,9 +69,9 @@ class OdooService:
                     "service": "object",
                     "method": "execute_kw",
                     "args": [
-                        ODOO_DB,
+                        self.db,
                         uid,
-                        ODOO_PASSWORD,
+                        self.password,
                         model,
                         method,
                         args or [],
@@ -61,14 +80,17 @@ class OdooService:
                 },
                 "id": 2,
             },
+            timeout=10,
         )
 
-        result = response.json()
+        response.raise_for_status()
 
-        if "error" in result:
-            raise Exception(str(result["error"]))
+        data = response.json()
 
-        return result.get("result")
+        if "error" in data:
+            raise Exception(data["error"])
+
+        return data.get("result")
 
 
 odoo_service = OdooService()

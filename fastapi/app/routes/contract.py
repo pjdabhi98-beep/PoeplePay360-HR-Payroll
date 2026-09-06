@@ -10,10 +10,11 @@ router = APIRouter(
 )
 
 
+# -----------------------------------------
 # GET ALL CONTRACTS
+# -----------------------------------------
 @router.get("/")
 def get_contracts():
-
     try:
         contracts = odoo_service.execute(
             "peoplepay.contract",
@@ -29,13 +30,14 @@ def get_contracts():
                     "wage",
                     "salary_structure_id",
                     "state",
-                ]
+                ],
+                "order": "start_date desc",
             }
         )
 
         return {
             "success": True,
-            "data": contracts
+            "data": contracts,
         }
 
     except Exception as e:
@@ -45,15 +47,18 @@ def get_contracts():
         )
 
 
-# GET CONTRACT BY ID
+# -----------------------------------------
+# GET SINGLE CONTRACT
+# -----------------------------------------
 @router.get("/{contract_id}")
 def get_contract(contract_id: int):
-
     try:
         contracts = odoo_service.execute(
             "peoplepay.contract",
             "search_read",
-            [[["id", "=", contract_id]]],
+            [[
+                ["id", "=", contract_id]
+            ]],
             {
                 "fields": [
                     "id",
@@ -76,7 +81,7 @@ def get_contract(contract_id: int):
 
         return {
             "success": True,
-            "data": contracts[0]
+            "data": contracts[0],
         }
 
     except HTTPException:
@@ -89,10 +94,11 @@ def get_contract(contract_id: int):
         )
 
 
+# -----------------------------------------
 # CREATE CONTRACT
+# -----------------------------------------
 @router.post("/")
 def create_contract(contract: ContractCreate):
-
     try:
         contract_id = odoo_service.execute(
             "peoplepay.contract",
@@ -108,7 +114,11 @@ def create_contract(contract: ContractCreate):
                         else False
                     ),
                     "wage": contract.wage,
-                    "salary_structure_id": contract.salary_structure_id or False,
+                    "salary_structure_id": (
+                        contract.salary_structure_id
+                        if contract.salary_structure_id
+                        else False
+                    ),
                     "state": contract.state,
                 }
             ]]
@@ -117,7 +127,7 @@ def create_contract(contract: ContractCreate):
         return {
             "success": True,
             "message": "Contract created successfully",
-            "contract_id": contract_id
+            "contract_id": contract_id,
         }
 
     except Exception as e:
@@ -127,18 +137,21 @@ def create_contract(contract: ContractCreate):
         )
 
 
+# -----------------------------------------
 # UPDATE CONTRACT
+# -----------------------------------------
 @router.put("/{contract_id}")
 def update_contract(
     contract_id: int,
     contract: ContractUpdate
 ):
-
     try:
         existing = odoo_service.execute(
             "peoplepay.contract",
             "search",
-            [[["id", "=", contract_id]]]
+            [[
+                ["id", "=", contract_id]
+            ]]
         )
 
         if not existing:
@@ -161,13 +174,16 @@ def update_contract(
         odoo_service.execute(
             "peoplepay.contract",
             "write",
-            [[contract_id], values]
+            [
+                [contract_id],
+                values
+            ]
         )
 
         return {
             "success": True,
             "message": "Contract updated successfully",
-            "contract_id": contract_id
+            "contract_id": contract_id,
         }
 
     except HTTPException:
@@ -180,15 +196,18 @@ def update_contract(
         )
 
 
+# -----------------------------------------
 # DELETE CONTRACT
+# -----------------------------------------
 @router.delete("/{contract_id}")
 def delete_contract(contract_id: int):
-
     try:
         existing = odoo_service.execute(
             "peoplepay.contract",
             "search",
-            [[["id", "=", contract_id]]]
+            [[
+                ["id", "=", contract_id]
+            ]]
         )
 
         if not existing:
@@ -206,7 +225,7 @@ def delete_contract(contract_id: int):
         return {
             "success": True,
             "message": "Contract deleted successfully",
-            "contract_id": contract_id
+            "contract_id": contract_id,
         }
 
     except HTTPException:

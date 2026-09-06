@@ -10,7 +10,7 @@
         <field name="name">HR Manager - All Employees</field>
         <field name="model_id" ref="model_peoplepay_employee"/>
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('odoo.group_peoplepay_hr_manager'))]"/>
+        <field name="groups" eval="[(4, ref('peoplepay360.group_peoplepay_hr_manager'))]"/>
     </record>
 
     <!-- HR Officer: see all employees -->
@@ -18,7 +18,7 @@
         <field name="name">HR Officer - All Employees</field>
         <field name="model_id" ref="model_peoplepay_employee"/>
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('odoo.group_peoplepay_hr_officer'))]"/>
+        <field name="groups" eval="[(4, ref('peoplepay360.group_peoplepay_hr_officer'))]"/>
     </record>
 
     <!-- Employee: own employee record -->
@@ -26,7 +26,7 @@
         <field name="name">Employee - Own Employee Record</field>
         <field name="model_id" ref="model_peoplepay_employee"/>
         <field name="domain_force">[('user_id', '=', user.id)]</field>
-        <field name="groups" eval="[(4, ref('odoo.group_peoplepay_employee'))]"/>
+        <field name="groups" eval="[(4, ref('peoplepay360.group_peoplepay_employee'))]"/>
     </record>
 
 
@@ -38,21 +38,21 @@
         <field name="name">HR Manager - All Contracts</field>
         <field name="model_id" ref="model_peoplepay_contract"/>
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('odoo.group_peoplepay_hr_manager'))]"/>
+        <field name="groups" eval="[(4, ref('peoplepay360.group_peoplepay_hr_manager'))]"/>
     </record>
 
     <record id="rule_peoplepay_officer_contract" model="ir.rule">
         <field name="name">HR Officer - All Contracts</field>
         <field name="model_id" ref="model_peoplepay_contract"/>
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('odoo.group_peoplepay_hr_officer'))]"/>
+        <field name="groups" eval="[(4, ref('peoplepay360.group_peoplepay_hr_officer'))]"/>
     </record>
 
     <record id="rule_peoplepay_employee_contract" model="ir.rule">
         <field name="name">Employee - Own Contracts</field>
         <field name="model_id" ref="model_peoplepay_contract"/>
         <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
-        <field name="groups" eval="[(4, ref('odoo.group_peoplepay_employee'))]"/>
+        <field name="groups" eval="[(4, ref('peoplepay360.group_peoplepay_employee'))]"/>
     </record>
 
 
@@ -64,21 +64,21 @@
         <field name="name">HR Manager - All Schedules</field>
         <field name="model_id" ref="model_peoplepay_working_schedule"/>
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('odoo.group_peoplepay_hr_manager'))]"/>
+        <field name="groups" eval="[(4, ref('peoplepay360.group_peoplepay_hr_manager'))]"/>
     </record>
 
     <record id="rule_peoplepay_officer_schedule" model="ir.rule">
         <field name="name">HR Officer - All Schedules</field>
         <field name="model_id" ref="model_peoplepay_working_schedule"/>
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('odoo.group_peoplepay_hr_officer'))]"/>
+        <field name="groups" eval="[(4, ref('peoplepay360.group_peoplepay_hr_officer'))]"/>
     </record>
 
     <record id="rule_peoplepay_employee_schedule" model="ir.rule">
         <field name="name">Employee - Schedules</field>
         <field name="model_id" ref="model_peoplepay_working_schedule"/>
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('odoo.group_peoplepay_employee'))]"/>
+        <field name="groups" eval="[(4, ref('peoplepay360.group_peoplepay_employee'))]"/>
     </record>
 
 
@@ -90,21 +90,21 @@
         <field name="name">HR Manager - All Attendance</field>
         <field name="model_id" ref="model_peoplepay_attendance"/>
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('odoo.group_peoplepay_hr_manager'))]"/>
+        <field name="groups" eval="[(4, ref('peoplepay360.group_peoplepay_hr_manager'))]"/>
     </record>
 
     <record id="rule_peoplepay_officer_attendance" model="ir.rule">
         <field name="name">HR Officer - All Attendance</field>
         <field name="model_id" ref="model_peoplepay_attendance"/>
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('odoo.group_peoplepay_hr_officer'))]"/>
+        <field name="groups" eval="[(4, ref('peoplepay360.group_peoplepay_hr_officer'))]"/>
     </record>
 
     <record id="rule_peoplepay_employee_attendance" model="ir.rule">
         <field name="name">Employee - Own Attendance</field>
         <field name="model_id" ref="model_peoplepay_attendance"/>
         <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
-        <field name="groups" eval="[(4, ref('odoo.group_peoplepay_employee'))]"/>
+        <field name="groups" eval="[(4, ref('peoplepay360.group_peoplepay_employee'))]"/>
     </record>
 
 
@@ -116,14 +116,14 @@
         <field name="name">HR Manager - All Time Off Types</field>
         <field name="model_id" ref="model_peoplepay_time_off_type"/>
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('odoo.group_peoplepay_hr_manager'))]"/>
+        <field name="groups" eval="[(4, ref('peoplepay360.group_peoplepay_hr_manager'))]"/>
     </record>
 
     <record id="rule_peoplepay_officer_timeoff_type" model="ir.rule">
         <field name="name">HR Officer - All Time Off Types</field>
         <field name="model_id" ref="model_peoplepay_time_off_type"/>
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('odoo.group_peoplepay_hr_officer'))]"/>
+        <field name="groups" eval="[(4, ref('peoplepay360.group_peoplepay_hr_officer'))]"/>
     </record>
 
 
@@ -135,21 +135,21 @@
         <field name="name">HR Manager - All Allocations</field>
         <field name="model_id" ref="model_peoplepay_time_off_allocation"/>
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('odoo.group_peoplepay_hr_manager'))]"/>
+        <field name="groups" eval="[(4, ref('peoplepay360.group_peoplepay_hr_manager'))]"/>
     </record>
 
     <record id="rule_peoplepay_officer_allocation" model="ir.rule">
         <field name="name">HR Officer - All Allocations</field>
         <field name="model_id" ref="model_peoplepay_time_off_allocation"/>
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('odoo.group_peoplepay_hr_officer'))]"/>
+        <field name="groups" eval="[(4, ref('peoplepay360.group_peoplepay_hr_officer'))]"/>
     </record>
 
     <record id="rule_peoplepay_employee_allocation" model="ir.rule">
         <field name="name">Employee - Own Allocations</field>
         <field name="model_id" ref="model_peoplepay_time_off_allocation"/>
         <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
-        <field name="groups" eval="[(4, ref('odoo.group_peoplepay_employee'))]"/>
+        <field name="groups" eval="[(4, ref('peoplepay360.group_peoplepay_employee'))]"/>
     </record>
 
 
@@ -161,21 +161,21 @@
         <field name="name">HR Manager - All Time Off Requests</field>
         <field name="model_id" ref="model_peoplepay_time_off_request"/>
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('odoo.group_peoplepay_hr_manager'))]"/>
+        <field name="groups" eval="[(4, ref('peoplepay360.group_peoplepay_hr_manager'))]"/>
     </record>
 
     <record id="rule_peoplepay_officer_timeoff_request" model="ir.rule">
         <field name="name">HR Officer - All Time Off Requests</field>
         <field name="model_id" ref="model_peoplepay_time_off_request"/>
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('odoo.group_peoplepay_hr_officer'))]"/>
+        <field name="groups" eval="[(4, ref('peoplepay360.group_peoplepay_hr_officer'))]"/>
     </record>
 
     <record id="rule_peoplepay_employee_timeoff_request" model="ir.rule">
         <field name="name">Employee - Own Time Off Requests</field>
         <field name="model_id" ref="model_peoplepay_time_off_request"/>
         <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
-        <field name="groups" eval="[(4, ref('odoo.group_peoplepay_employee'))]"/>
+        <field name="groups" eval="[(4, ref('peoplepay360.group_peoplepay_employee'))]"/>
     </record>
 
 
@@ -187,14 +187,14 @@
         <field name="name">HR Manager - All Salary Structures</field>
         <field name="model_id" ref="model_peoplepay_salary_structure"/>
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('odoo.group_peoplepay_hr_manager'))]"/>
+        <field name="groups" eval="[(4, ref('peoplepay360.group_peoplepay_hr_manager'))]"/>
     </record>
 
     <record id="rule_peoplepay_officer_salary_structure" model="ir.rule">
         <field name="name">HR Officer - All Salary Structures</field>
         <field name="model_id" ref="model_peoplepay_salary_structure"/>
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('odoo.group_peoplepay_hr_officer'))]"/>
+        <field name="groups" eval="[(4, ref('peoplepay360.group_peoplepay_hr_officer'))]"/>
     </record>
 
 
@@ -206,14 +206,14 @@
         <field name="name">HR Manager - All Salary Rules</field>
         <field name="model_id" ref="model_peoplepay_salary_rule"/>
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('odoo.group_peoplepay_hr_manager'))]"/>
+        <field name="groups" eval="[(4, ref('peoplepay360.group_peoplepay_hr_manager'))]"/>
     </record>
 
     <record id="rule_peoplepay_officer_salary_rule" model="ir.rule">
         <field name="name">HR Officer - All Salary Rules</field>
         <field name="model_id" ref="model_peoplepay_salary_rule"/>
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('odoo.group_peoplepay_hr_officer'))]"/>
+        <field name="groups" eval="[(4, ref('peoplepay360.group_peoplepay_hr_officer'))]"/>
     </record>
 
 
@@ -225,14 +225,14 @@
         <field name="name">HR Manager - All Payruns</field>
         <field name="model_id" ref="model_peoplepay_payrun"/>
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('odoo.group_peoplepay_hr_manager'))]"/>
+        <field name="groups" eval="[(4, ref('peoplepay360.group_peoplepay_hr_manager'))]"/>
     </record>
 
     <record id="rule_peoplepay_officer_payrun" model="ir.rule">
         <field name="name">HR Officer - All Payruns</field>
         <field name="model_id" ref="model_peoplepay_payrun"/>
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('odoo.group_peoplepay_hr_officer'))]"/>
+        <field name="groups" eval="[(4, ref('peoplepay360.group_peoplepay_hr_officer'))]"/>
     </record>
 
 
@@ -244,21 +244,21 @@
         <field name="name">HR Manager - All Payslips</field>
         <field name="model_id" ref="model_peoplepay_payslip"/>
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('odoo.group_peoplepay_hr_manager'))]"/>
+        <field name="groups" eval="[(4, ref('peoplepay360.group_peoplepay_hr_manager'))]"/>
     </record>
 
     <record id="rule_peoplepay_officer_payslip" model="ir.rule">
         <field name="name">HR Officer - All Payslips</field>
         <field name="model_id" ref="model_peoplepay_payslip"/>
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('odoo.group_peoplepay_hr_officer'))]"/>
+        <field name="groups" eval="[(4, ref('peoplepay360.group_peoplepay_hr_officer'))]"/>
     </record>
 
     <record id="rule_peoplepay_employee_payslip" model="ir.rule">
         <field name="name">Employee - Own Payslips</field>
         <field name="model_id" ref="model_peoplepay_payslip"/>
         <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
-        <field name="groups" eval="[(4, ref('odoo.group_peoplepay_employee'))]"/>
+        <field name="groups" eval="[(4, ref('peoplepay360.group_peoplepay_employee'))]"/>
     </record>
 
 
@@ -270,21 +270,21 @@
         <field name="name">HR Manager - All Payslip Lines</field>
         <field name="model_id" ref="model_peoplepay_payslip_line"/>
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('odoo.group_peoplepay_hr_manager'))]"/>
+        <field name="groups" eval="[(4, ref('peoplepay360.group_peoplepay_hr_manager'))]"/>
     </record>
 
     <record id="rule_peoplepay_officer_payslip_line" model="ir.rule">
         <field name="name">HR Officer - All Payslip Lines</field>
         <field name="model_id" ref="model_peoplepay_payslip_line"/>
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('odoo.group_peoplepay_hr_officer'))]"/>
+        <field name="groups" eval="[(4, ref('peoplepay360.group_peoplepay_hr_officer'))]"/>
     </record>
 
     <record id="rule_peoplepay_employee_payslip_line" model="ir.rule">
         <field name="name">Employee - Own Payslip Lines</field>
         <field name="model_id" ref="model_peoplepay_payslip_line"/>
         <field name="domain_force">[('payslip_id.employee_id.user_id', '=', user.id)]</field>
-        <field name="groups" eval="[(4, ref('odoo.group_peoplepay_employee'))]"/>
+        <field name="groups" eval="[(4, ref('peoplepay360.group_peoplepay_employee'))]"/>
     </record>
 
 </odoo>
