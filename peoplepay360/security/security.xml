@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- PeoplePay360 HR Manager -->
+    <record id="group_peoplepay_hr_manager" model="res.groups">
+        <field name="name">PeoplePay360 HR Manager</field>
+        <field name="category_id" ref="base.module_category_human_resources"/>
+        <field name="implied_ids" eval="[
+            (4, ref('base.group_user')),
+            (4, ref('peoplepay360.group_peoplepay_hr_officer'))
+        ]"/>
+    </record>
+
+    <!-- PeoplePay360 HR Officer -->
+    <record id="group_peoplepay_hr_officer" model="res.groups">
+        <field name="name">PeoplePay360 HR Officer</field>
+        <field name="category_id" ref="base.module_category_human_resources"/>
+        <field name="implied_ids" eval="[
+            (4, ref('base.group_user')),
+            (4, ref('peoplepay360.group_peoplepay_employee'))
+        ]"/>
+    </record>
+
+    <!-- PeoplePay360 Employee -->
+    <record id="group_peoplepay_employee" model="res.groups">
+        <field name="name">PeoplePay360 Employee</field>
+        <field name="category_id" ref="base.module_category_human_resources"/>
+        <field name="implied_ids" eval="[
+            (4, ref('base.group_user'))
+        ]"/>
+    </record>
+
+    <!-- Administrator -->
+    <record id="group_peoplepay_admin" model="res.groups">
+        <field name="name">PeoplePay360 Administrator</field>
+        <field name="category_id" ref="base.module_category_human_resources"/>
+        <field name="implied_ids" eval="[
+            (4, ref('base.group_user')),
+            (4, ref('peoplepay360.group_peoplepay_hr_manager'))
+        ]"/>
+    </record>
+
+</odoo>
